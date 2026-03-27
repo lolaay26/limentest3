@@ -59,27 +59,27 @@ textarea:focus { border-color:#b8975a; }
 .divider-star { color:#b8975a; }
 .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
 .art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
-/* Images — contain full artwork, not cropped */
-.art-card img { width:100%; height:260px; object-fit:contain; display:block; background:#f0ebe0; }
-.art-ph { height:260px; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
-.art-ph-t { font-style:italic; font-size:0.9rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
-.art-ph-s { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a30; }
-.art-meta { padding:0.9rem 1.1rem; border-top:1px solid #e0d8c8; }
-.art-title { font-style:italic; font-size:0.95rem; color:#1c1810; margin-bottom:0.3rem; }
-/* Art artist label — larger, darker */
-.art-artist { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase; color:#7a5a20; margin-bottom:0.5rem; font-weight:500; }
-.art-why { font-size:0.92rem; color:#4a4035; line-height:1.75; }
+/* Images — taller, contain full artwork */
+.art-card img { width:100%; height:320px; object-fit:contain; display:block; background:#f0ebe0; }
+.art-ph { height:320px; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
+.art-ph-t { font-style:italic; font-size:0.95rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
+.art-ph-s { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a30; }
+.art-meta { padding:1rem 1.2rem; border-top:1px solid #e0d8c8; }
+.art-title { font-style:italic; font-size:1rem; color:#1c1810; margin-bottom:0.3rem; }
+/* Art artist — bigger, darker */
+.art-artist { font-family:sans-serif; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:#7a5a20; margin-bottom:0.5rem; font-weight:500; }
+.art-why { font-size:0.95rem; color:#4a4035; line-height:1.75; }
 .poetry-section { margin-bottom:2.5rem; text-align:center; }
 .poetry-toggle { font-family:sans-serif; font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; color:#6a5e4e; background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.3rem 0; font-weight:500; }
 .poetry-toggle:hover { color:#b8975a; border-color:#b8975a; }
 .poetry-block { display:none; margin-top:1.8rem; padding:2.5rem; background:#1c1810; color:#f5f0e8; position:relative; text-align:left; }
 .poetry-block.open { display:block; }
-.poem-text { font-size:1.08rem; font-style:italic; line-height:2.1; color:#f5f0e8; margin-bottom:1.3rem; white-space:pre-line; }
-.poem-attr { font-family:sans-serif; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color:#c8a860; margin-bottom:0.3rem; font-weight:500; }
-.poem-src { font-style:italic; font-size:0.88rem; color:rgba(245,240,232,0.6); }
-.poetry-close { position:absolute; top:1rem; right:1.2rem; font-family:sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,240,232,0.4); background:none; border:none; cursor:pointer; }
+.poem-text { font-size:1.12rem; font-style:italic; line-height:2.1; color:#f5f0e8; margin-bottom:1.3rem; white-space:pre-line; }
+.poem-attr { font-family:sans-serif; font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:#c8a860; margin-bottom:0.3rem; font-weight:500; }
+.poem-src { font-style:italic; font-size:0.92rem; color:rgba(245,240,232,0.6); }
+.poetry-close { position:absolute; top:1rem; right:1.2rem; font-family:sans-serif; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,240,232,0.4); background:none; border:none; cursor:pointer; }
 .poetry-close:hover { color:#b8975a; }
-.btn-back { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.25em; text-transform:uppercase; color:#9a8e7e; background:none; border:none; border-bottom:1px solid #e0d8c8; cursor:pointer; padding:0.3rem 0; display:inline-block; }
+.btn-back { font-family:sans-serif; font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:#7a6e5e; background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.3rem 0; display:inline-block; }
 .btn-back:hover { color:#b8975a; border-color:#b8975a; }
 @media(max-width:560px){ header{padding:1.5rem;} main{padding:2rem 1.2rem 4rem;} .art-grid{grid-template-columns:1fr;} .poetry-block{padding:2rem 1.5rem;} }
 </style>
@@ -357,7 +357,10 @@ If you open with a concept (haecceity, conatus, fūdo, etc), the primary thinker
 
 TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack".
 
-OPENING LINE — vary every time. Can name a concept directly, name what the entry is carrying, or name the thinker. Never: "What you wrote resonates with..."
+OPENING — always two moves:
+MOVE 1: One sharp sentence that names the quality of experience the entry is carrying. Not a summary. Not a question. A direct statement that distills what the entry is actually holding — sensory, affective, temporal. This is what the person reads and immediately recognises as their own experience. Example: "Stippled light — light that has passed through something living before it reaches you." Or: "The body insisting. Not a want exactly — more like a weather that has moved in."
+MOVE 2: Either "There is a word for this..." (when leading with a concept) OR "There is a philosopher whose work rhymes with this..." / "There is an anthropologist whose work rhymes with this..." / "There is a poet whose work rhymes with this..." (name the discipline when it genuinely differs from philosophy). The word "rhymes" is key — it keeps the person's experience primary and the thinker alongside it, not above it.
+These two moves together ARE the resonance field. No separate summary or echo needed.
 
 FULL RANGE OF THINKERS:
 Continental: Spinoza, Bergson, Heidegger, Nietzsche, Merleau-Ponty, Bachelard, de Beauvoir, Wittgenstein, Benjamin, Bakhtin, Deleuze/Guattari, Husserl, Sartre, Arendt, Levinas
@@ -388,7 +391,7 @@ ${ART_KEYS}
 
 JSON only, no markdown:
 {
-  "resonance": "Opening — under 35 words. Varied formula. Names what the entry is carrying. Can include a phrase from the entry.",
+  "resonance": "Two moves. First: one sharp sentence naming the quality of experience the entry carries — direct, specific, sensory. Second: 'There is a word for this...' OR 'There is a [philosopher/anthropologist/poet] whose work rhymes with this...' Together under 40 words.",
   "concept_name": "Concept term if concept-led — MUST match primary thinker. Else empty string.",
   "concept_gloss": "One plain warm sentence. Else empty string.",
   "primary_tradition": "Thinker · Tradition",
