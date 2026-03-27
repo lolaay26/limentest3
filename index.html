@@ -233,28 +233,70 @@ const AIC_WORKS = [
 
 const ART = {};
 const ART_LOAD_PROMISE = (async () => {
+  // Get AIC metadata (titles, artists, traditions) — this works fine
   const batch1 = AIC_WORKS.slice(0, 50).map(w => w.id).join(',');
   const batch2 = AIC_WORKS.slice(50).map(w => w.id).join(',');
-  const imageMap = {};
+  const aicMeta = {};
   for (const ids of [batch1, batch2]) {
     if (!ids) continue;
     try {
-      console.log('Fetching AIC batch...');
-      const res = await fetch(`https://api.artic.edu/api/v1/artworks?ids=${ids}&fields=id,image_id&limit=50`);
-      console.log('AIC response status:', res.status);
+      const res = await fetch(`https://api.artic.edu/api/v1/artworks?ids=${ids}&fields=id,title,artist_display&limit=50`);
       const data = await res.json();
-      console.log('AIC batch returned', data.data?.length, 'items');
-      (data.data || []).forEach(item => { if (item.image_id) imageMap[item.id] = item.image_id; });
-    } catch(e) { console.log('AIC batch fetch error:', e.message); }
+      (data.data || []).forEach(item => { aicMeta[item.id] = item; });
+    } catch(e) {}
   }
-  AIC_WORKS.forEach(w => {
-    const imgId = imageMap[w.id];
-    if (imgId) {
-      const rawUrl = `https://www.artic.edu/iiif/2/${imgId}/full/600,/0/default.jpg`;
-      ART[w.key] = { url: `${PROXY}${encodeURIComponent(rawUrl)}`, title: w.title, artist: w.artist, tradition: w.tradition };
-    }
-  });
-  console.log(`ART library loaded: ${Object.keys(ART).length} of ${AIC_WORKS.length} works`);
+
+  // For each work, find image via Met Museum API (allows Cloudflare requests)
+  async function getMetImage(searchQuery) {
+    try {
+      const searchRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=${encodeURIComponent(searchQuery)}`);
+      const searchData = await searchRes.json();
+      if (!searchData.objectIDs?.length) return null;
+      // Try first few results
+      for (let i = 0; i < Math.min(3, searchData.objectIDs.length); i++) {
+        const objRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${searchData.objectIDs[i]}`);
+        const obj = await objRes.json();
+        if (obj.primaryImageSmall && obj.isPublicDomain) {
+          return `${PROXY}${encodeURIComponent(obj.primaryImageSmall)}`;
+        }
+      }
+      return null;
+    } catch(e) { return null; }
+  }
+
+  // Also try Wikimedia as fallback
+  async function getWikiImage(searchQuery) {
+    try {
+      const searchRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&srnamespace=6&srlimit=5&format=json&origin=*`);
+      const searchData = await searchRes.json();
+      const results = searchData?.query?.search;
+      if (!results?.length) return null;
+      for (const result of results.slice(0, 3)) {
+        const infoRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(result.title)}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=600&format=json&origin=*`);
+        const infoData = await infoRes.json();
+        const page = Object.values(infoData?.query?.pages || {})[0];
+        const imgUrl = page?.imageinfo?.[0]?.thumburl;
+        if (imgUrl) return `${PROXY}${encodeURIComponent(imgUrl)}`;
+      }
+      return null;
+    } catch(e) { return null; }
+  }
+
+  // Load images in parallel for all works
+  await Promise.all(AIC_WORKS.map(async w => {
+    const searchQuery = `${w.artist.split(',')[0]} ${w.title.split('(')[0].trim()}`;
+    // Try Met first, then Wikimedia
+    let imgUrl = await getMetImage(searchQuery) || await getWikiImage(searchQuery);
+    ART[w.key] = {
+      url: imgUrl || null,
+      title: w.title,
+      artist: w.artist,
+      tradition: w.tradition
+    };
+  }));
+
+  const loaded = Object.values(ART).filter(a => a.url).length;
+  console.log(`ART library loaded: ${loaded} of ${AIC_WORKS.length} works with images`);
 })();
 
 const ART_KEYS = AIC_WORKS.map(w => `${w.key} (${w.title} · ${w.tradition})`).join(', ');
