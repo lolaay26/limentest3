@@ -40,8 +40,8 @@ textarea:focus { border-color:#b8975a; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
-.resonance-line1 { font-size:1.05rem; font-style:italic; line-height:1.8; color:var(--sub); margin-bottom:0.4rem; }
-.resonance-line2 { font-size:1.05rem; font-style:italic; line-height:1.8; color:var(--sub); margin-bottom:1.8rem; }
+.resonance-line1 { font-size:1.1rem; font-style:normal; font-weight:500; line-height:1.8; color:#8a6a30; margin-bottom:0.4rem; }
+.resonance-line2 { font-size:1.1rem; font-style:normal; font-weight:500; line-height:1.8; color:#9a5c20; margin-bottom:1.8rem; }
 /* Concept block */
 .concept-block { background:#f7f3ea; border:1px solid #e0d8c8; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
 .concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:0.5rem; font-weight:600; text-transform:uppercase; }
@@ -63,8 +63,8 @@ textarea:focus { border-color:#b8975a; }
 .divider-star { color:#b8975a; }
 .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
 .art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
-.art-card img { width:100%; height:340px; object-fit:contain; display:block; background:#f0ebe0; }
-.art-ph { height:340px; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
+.art-card img { width:100%; aspect-ratio:4/3; object-fit:contain; display:block; background:#f8f5f0; }
+.art-ph { aspect-ratio:4/3; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
 .art-ph-t { font-style:italic; font-size:0.95rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
 .art-ph-s { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); }
 .art-meta { padding:1rem 1.2rem; border-top:1px solid #e0d8c8; }
@@ -87,8 +87,8 @@ textarea:focus { border-color:#b8975a; }
   header { padding:1.2rem 1.2rem 1rem; }
   main { padding:1.8rem 1.1rem 4rem; }
   .art-grid { grid-template-columns:1fr; }
-  .art-card img { height:280px; }
-  .art-ph { height:280px; }
+  .art-card img { aspect-ratio:4/3; }
+  .art-ph { aspect-ratio:4/3; }
   .poetry-block { padding:1.8rem 1.2rem; }
   .phil-block { padding:1.1rem 1.2rem; }
   .bridge { padding:0.8rem 1.2rem; }
@@ -98,6 +98,11 @@ textarea:focus { border-color:#b8975a; }
   .resonance-line1, .resonance-line2 { font-size:1rem; }
   .btn-reflect { width:100%; text-align:center; padding:1rem; }
 }
+
+/* Entry preview — small whisper at top of response */
+.entry-preview { margin-bottom:1.5rem; }
+.entry-preview-text { font-size:0.88rem; font-style:italic; color:#9a8e7e; line-height:1.7; }
+.entry-preview-more { background:none; border:none; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#b8975a; cursor:pointer; padding:0; margin-left:0.3rem; }
 </style>
 </head>
 <body>
@@ -111,8 +116,8 @@ textarea:focus { border-color:#b8975a; }
 
   <div id="input-section">
     <div class="date-line" id="date-line"></div>
-    <div class="prompt">What is on your mind today?</div>
-    <textarea id="journal-input" placeholder="Write anything — a conversation that stayed with you, a feeling you can't name, something you noticed, a question that won't leave you alone..."></textarea>
+    <div class="prompt">Write anything.</div>
+    <textarea id="journal-input" placeholder="A journal entry, a thought, a feeling you can't name, a conversation that stayed with you, something you noticed — anything at all..."></textarea>
     <div class="error" id="error-msg" style="display:none"></div>
     <button class="btn-reflect" onclick="reflect()">Reflect →</button>
     <div class="examples-section">
@@ -127,6 +132,9 @@ textarea:focus { border-color:#b8975a; }
   </div>
 
   <div id="response">
+    <div class="entry-preview" id="entry-preview">
+      <span class="entry-preview-text" id="entry-preview-text"></span><button class="entry-preview-more" id="entry-preview-toggle" onclick="toggleEntry()"></button>
+    </div>
     <div class="resonance-line1" id="resonance-line1"></div>
     <div class="resonance-line2" id="resonance-line2"></div>
     <div id="concept-block" class="concept-block" style="display:none">
@@ -370,21 +378,27 @@ YOUR CORE TASK:
 Read this entry for the full quality of experience it carries — not just its surface statement but the layers operating simultaneously: sensory, temporal, affective, relational. Think of Daniel Stern's concept of the "present moment" — the way a lived experience carries multiple registers at once: vitality contours, feeling tones, temporal shapes. The entry may not know what it is yet. Find where in the full breadth of human thought — any tradition, any culture, any century — those same layers have been named, lived, or understood. The match is a recognition: the reader arrives at a thinker or concept and feels that something already present in their experience has now been seen. The tradition does not interpret the entry. It meets it.
 
 CRITICAL — CONCEPT AND THINKER MUST MATCH:
-If you open with a concept (haecceity, conatus, fūdo, etc), the primary thinker MUST be the philosopher who developed or most deeply inhabited that concept. Do not introduce a concept and then discuss unrelated thinkers. Haecceity → Deleuze/Guattari. Conatus → Spinoza. Fūdo → Watsuji. Duration → Bergson. Heteroglossia → Bakhtin. Dadirri → Ungunmerr-Baumann. The concept and the thinker are one move, not two separate ones.
+If you open with a concept, the primary thinker MUST be the philosopher who developed or most deeply inhabited that concept. Haecceity → Deleuze/Guattari. Conatus → Spinoza. Fūdo → Watsuji. Duration → Bergson. Heteroglossia → Bakhtin. Dadirri → Ungunmerr-Baumann. Emplacement → Howes. Dwelling → Ingold. The concept and the thinker are one move, not two separate ones.
 
-TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack".
+TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued".
 
-OPENING — always two moves:
-MOVE 1: One sharp sentence that names the quality of experience the entry is carrying. Not a summary. Not a question. A direct statement that distills what the entry is actually holding — sensory, affective, temporal. This is what the person reads and immediately recognises as their own experience. Example: "Stippled light — light that has passed through something living before it reaches you." Or: "The body insisting. Not a want exactly — more like a weather that has moved in."
-MOVE 2: Either "There is a word for this..." (when leading with a concept) OR "There is a philosopher whose work rhymes with this..." / "There is an anthropologist whose work rhymes with this..." / "There is a poet whose work rhymes with this..." (name the discipline when it genuinely differs from philosophy). The word "rhymes" is key — it keeps the person's experience primary and the thinker alongside it, not above it.
-These two moves together ARE the resonance field. No separate summary or echo needed.
+OPENING — always two moves, two separate sentences:
+MOVE 1: One sharp sentence naming the quality of experience the entry carries. Sensory, specific, direct. Not a summary. Not a question. What the person reads and immediately recognises. Example: "Stippled light — light that has passed through something living before it reaches you." Or: "The body insisting. Not a want — more like a weather that has moved in."
+MOVE 2 (concept-led): "[Thinker] called this [concept]." e.g. "Spinoza called this conatus." or "Howes called this emplacement."
+MOVE 2 (thinker-led): "There is a philosopher whose work rhymes with this. [Name]." or "There is an anthropologist whose work rhymes with this. [Name]." Name the discipline. End with the name alone as a short beat.
+
+PHILOSOPHER DESCRIPTIONS — strict structure, 2 sentences:
+Sentence 1: [Name] was a [tradition word], [specific biographical fact — what they did, where, what they refused or insisted]. No superlatives. No "one of the greatest." Specific facts only. Use: was, is, became, spent, refused, insisted, held, found, knew, saw, understood. Never: "argued."
+Sentence 2: What specific territory they share with THIS entry. One sentence. Concrete, not general.
+Example: "Spinoza was a lens grinder, a rationalist, expelled from the Amsterdam Jewish community for refusing to separate God from nature. He saw desire — conatus — not as a flaw in the human, but as the very force by which anything exists at all."
+Example: "Watsuji was a Japanese ethicist who held that human existence is always already atmospheric — we don't stand inside an environment, we are constituted by it."
 
 FULL RANGE OF THINKERS:
 Continental: Spinoza, Bergson, Heidegger, Nietzsche, Merleau-Ponty, Bachelard, de Beauvoir, Wittgenstein, Benjamin, Bakhtin, Deleuze/Guattari, Husserl, Sartre, Arendt, Levinas
 American: James, Thoreau, Dewey
 Affect/Embodiment: Massumi, Berlant, Kathleen Stewart, Ahmed, Butler, Braidotti, Grosz, Barad
 Ecology/More-than-human: Abram, Toadvine, Haraway, Tsing, Viveiros de Castro
-Anthropology of senses/place: Tim Ingold (dwelling, wayfaring, skill, animate earth), David Howes (emplacement, sensory anthropology, the skin as boundary/threshold), Paul Stoller (sensory ethnography)
+Anthropology of senses/place: Tim Ingold (dwelling, wayfaring, skill, animate earth), David Howes (emplacement, sensory anthropology), Paul Stoller (sensory ethnography)
 Black feminist/Diasporic: Lorde, Wynter, hooks, Moten, Mbembe, Glissant, Fanon, Gilroy
 East Asian: Nishida, Watsuji, Yuasa, Zhuangzi, Nagarjuna, Dōgen, Ibn Rushd, Confucius
 Indigenous: Kimmerer, Atleo, Deloria, Ungunmerr-Baumann, Coulthard, Simpson, TallBear, Ubuntu, Buen Vivir
@@ -393,7 +407,7 @@ Contemplative: Thich Nhat Hanh, Machig Labdrön, Mirabai
 The entry decides who leads. Not habit. Not frequency. Genuine fit. Do not default to the same thinkers across entries.
 
 CONCEPTS (concept and primary thinker must match):
-haecceity → Deleuze/Guattari | conatus → Spinoza | heteroglossia → Bakhtin | duration → Bergson | affect → Massumi | opacity → Glissant | fūdo → Watsuji | interbeing → Thich Nhat Hanh | sympoiesis → Haraway | dadirri → Ungunmerr-Baumann | cruel optimism → Berlant | grievability → Butler | poiesis → (varies) | emplacement → Howes | dwelling → Ingold | flesh/chair → Merleau-Ponty | mono no aware → (Japanese aesthetics) | ubuntu → (African philosophy) | becoming → Deleuze/Guattari | the fold → Deleuze
+haecceity → Deleuze/Guattari | conatus → Spinoza | heteroglossia → Bakhtin | duration → Bergson | affect → Massumi | opacity → Glissant | fūdo → Watsuji | interbeing → Thich Nhat Hanh | sympoiesis → Haraway | dadirri → Ungunmerr-Baumann | cruel optimism → Berlant | grievability → Butler | emplacement → Howes | dwelling → Ingold | flesh/chair → Merleau-Ponty | mono no aware → Japanese aesthetics | ubuntu → African philosophy | becoming → Deleuze/Guattari | the fold → Deleuze
 
 SECOND THINKER — different tradition, not opposition:
 - convergence: arriving at the same territory from different directions
@@ -401,25 +415,25 @@ SECOND THINKER — different tradition, not opposition:
 - expansion: adds a dimension the first tradition entirely missed
 - feminist resonance: names what the first saw but couldn't say
 
-AND FURTHER — 2-3 sentences maximum. Written in plain spoken language. Stays at the level of the idea — does not comment on, interpret, or affirm the person's specific situation or state. Does not tell the person what their experience means about them. Does not suggest what they should do or feel. Opens a philosophical door — does not walk through it on their behalf. Never: "Maybe that's just the body doing..." or "Perhaps you are..." or any sentence that turns back to address the person's specific experience.
+AND FURTHER — 2 sentences maximum. Both thinkers named. Plain spoken language — one sentence sensory or image-based, one sentence the philosophical turn. Stays at the level of the idea. Does not comment on or affirm the person's specific situation. Does not tell them what their experience means. Opens a door, does not walk through it on their behalf. Never: "Maybe that's just..." or "Perhaps you are..." Example register: "Bergson heard the felt quality of experience — its intensity, its vitality — peaks, then thins. Zhuangzi would add: the question was never whether you finished, but whether you were following the grain at all."
 
 ARTWORKS — choose two from this curated library. Different traditions. Match the quality of experience, not just the subject.
 ${ART_KEYS}
 
 JSON only, no markdown:
 {
-  "resonance": "Two sentences separated by a period. Sentence 1: direct observation of what the entry is carrying — sensory, specific. Sentence 2: 'There is a word for this.' OR 'There is a philosopher whose work rhymes with this.' OR 'There is an anthropologist whose work rhymes with this.' The period between them creates a pause. Together under 40 words.",
+  "resonance": "Two sentences. Sentence 1: sharp sensory observation of what the entry carries. Sentence 2: '[Thinker] called this [concept].' OR 'There is a [philosopher/anthropologist/poet] whose work rhymes with this. [Name].' Together under 40 words.",
   "concept_name": "Concept term if concept-led — MUST match primary thinker. Else empty string.",
-  "concept_gloss": "One plain warm sentence. Else empty string.",
+  "concept_gloss": "One plain direct sentence — a precise peer-reviewed style definition, not an interpretive paraphrase. Else empty string.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "2 sentences max. Who they are and what specific territory they share with this entry. Plain language.",
-  "primary_quote": "Real quote, under 35 words",
+  "primary_who": "Exactly 2 sentences. Structure: '[Name] was a [tradition word], [specific biographical fact].' Then: what specific territory they share with THIS entry.",
+  "primary_quote": "Real verified quote, under 35 words",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "2 sentences. Who they are and what they add.",
-  "mirror_quote": "Real quote, under 30 words",
+  "mirror_who": "Exactly 2 sentences. Same structure as primary_who.",
+  "mirror_quote": "Real verified quote, under 30 words",
   "mirror_relationship": "One sentence. What becomes visible holding both together.",
-  "expansion": "2-3 sentences maximum. Spoken language. Stays at the level of the idea. Does NOT address the person's specific state. Opens rather than closes.",
+  "expansion": "2 sentences maximum. Both thinkers named. Spoken language. Level of the idea only. Does not address the person.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — the quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
@@ -464,6 +478,14 @@ async function reflect(){
 
 async function renderResponse(entry,d){
   document.getElementById('loading').style.display='none';
+  // Entry preview
+  const shortEntry = entry.length > 120 ? entry.slice(0, 120) + '…' : entry;
+  const previewEl = document.getElementById('entry-preview-text');
+  previewEl.textContent = shortEntry;
+  previewEl.setAttribute('data-short', shortEntry);
+  previewEl.setAttribute('data-full', entry);
+  const toggleBtn = document.getElementById('entry-preview-toggle');
+  if (entry.length > 120) { toggleBtn.textContent = ' ↓ more'; } else { toggleBtn.textContent = ''; }
   // Split resonance into two lines — first sentence, then the rhyme/word line
   const res = d.resonance || '';
   const splitIdx = res.search(/\.\s+There is|There is/);
@@ -508,7 +530,7 @@ async function renderResponse(entry,d){
 
   function renderArtCard(card, art, why) {
     const img = document.createElement('img');
-    img.style.cssText = 'width:100%;height:210px;object-fit:cover;display:block;';
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;background:#f8f5f0;';
     img.alt = art.title;
     img.onerror = function() {
       this.style.display = 'none';
@@ -567,6 +589,19 @@ async function renderResponse(entry,d){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+function toggleEntry(){
+  const el = document.getElementById('entry-preview-text');
+  const btn = document.getElementById('entry-preview-toggle');
+  const full = el.getAttribute('data-full');
+  const short = el.getAttribute('data-short');
+  if (el.textContent === short) {
+    el.textContent = full;
+    btn.textContent = ' ↑';
+  } else {
+    el.textContent = short;
+    btn.textContent = ' ↓ more';
+  }
+}
 function togglePoetry(){document.getElementById('poetry-block').classList.toggle('open');}
 
 function goBack(){
