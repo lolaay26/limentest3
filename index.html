@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!-- v20260328032447 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -46,8 +46,8 @@ textarea:focus { border-color:#b8975a; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
-.resonance-line1 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; text-align:center; }
-.resonance-line2 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:1.8rem; text-align:center; }
+.resonance-line1 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; text-align:left; }
+.resonance-line2 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:1.8rem; text-align:left; }
 /* Concept block */
 .concept-block { background:#ffffff; border:1px solid #e0d8c8; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
 .concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:0.5rem; font-weight:600; text-transform:uppercase; }
@@ -111,7 +111,7 @@ textarea:focus { border-color:#b8975a; }
 .entry-preview-more { background:none; border:none; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#b8975a; cursor:pointer; padding:0; margin-left:0.3rem; }
 </style>
 </head>
-<body style="background:#f9f8f6 !important">
+<body style="background-color:#f9f8f6 !important; background:#f9f8f6 !important">
 <header>
   <div class="logo">LIMEN</div>
   <div class="tagline">Go deeper.</div>
@@ -397,13 +397,18 @@ MOVE 2 (concept-led): "[Thinker] called this [concept]." e.g. "Bergson called th
 MOVE 2 (thinker-led): "There is a philosopher whose work rhymes with this. [Name]." Name the discipline when relevant. The name lands as a short final beat on its own.
 
 PHILOSOPHER DESCRIPTIONS — 2 sentences maximum, tight:
-Sentence 1: [Name] was a [tradition word], [one specific fact]. NEVER mention nationality — the tradition label already carries that. No warm-up phrases. No "spent their life thinking about." No "devoted their career to." Just the fact.
-Sentence 2: What this entry shares with their work. One concrete clause.
+Sentence 1: [Name] was a [tradition word], [one specific fact]. NEVER EVER use nationality words — not Japanese, not British, not French, not German, not American. The tradition label carries the context. No warm-up phrases. No "spent their life." Just the fact.
+Sentence 2: What this entry shares with their work. One concrete clause. No interpretation of the entry itself.
 Examples:
 "Bergson was a vitalist who insisted clock time is a fiction — a grid thrown over something alive."
-"Zhuangzi was a Daoist philosopher in fourth-century BCE China who refused to separate skillful action from attentiveness to natural grain."
+"Watsuji was a Kyoto School ethicist who refused to separate human existence from the climate, season, and texture of the world around it."
+"Ingold was an anthropologist of skill and dwelling who held that human life is not lived on the surface of the world but woven through it."
 "Spinoza was a lens grinder, a rationalist, expelled from Amsterdam for refusing to separate God from nature."
 "Goffman was a sociologist, trained at Chicago, who showed that social life is structured by performance."
+
+WATSUJI SPECIFICALLY: Always "Kyoto School ethicist" — never "Japanese philosopher." The Kyoto School is Japan's first original school of philosophy, working at the intersection of Western phenomenology and Buddhist/Confucian thought.
+INGOLD SPECIFICALLY: Always "anthropologist of skill and dwelling" — never "British anthropologist."
+HOWES SPECIFICALLY: Always "sensory anthropologist" — never "Canadian anthropologist" or just "anthropologist."
 
 CRITICAL — CONCEPT NAME CONSISTENCY:
 The term named in Move 2 of the opening ("Goffman called this X") MUST be the exact same term used in concept_name. Never use one name in the opening and a different name in the concept block. If the opening says "performance of self" the concept_name must say "PERFORMANCE OF SELF" — not "presentation of self" or any variation.
