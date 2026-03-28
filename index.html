@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Limen — Go deeper.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +46,7 @@ textarea:focus { border-color:#b8975a; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
-.resonance-line1 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; }
+.resonance-line1 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; text-align:center; }
 .resonance-line2 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:1.8rem; text-align:center; }
 /* Concept block */
 .concept-block { background:#ffffff; border:1px solid #e0d8c8; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
@@ -108,7 +111,7 @@ textarea:focus { border-color:#b8975a; }
 .entry-preview-more { background:none; border:none; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#b8975a; cursor:pointer; padding:0; margin-left:0.3rem; }
 </style>
 </head>
-<body>
+<body style="background:#f9f8f6 !important">
 <header>
   <div class="logo">LIMEN</div>
   <div class="tagline">Go deeper.</div>
@@ -159,7 +162,7 @@ textarea:focus { border-color:#b8975a; }
       <div class="expansion-label">And further —</div>
       <div class="expansion-text" id="expansion-text"></div>
     </div>
-    <div class="divider"><div class="divider-line"></div><div class="divider-star">✦</div><div class="divider-line"></div></div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-star" style="color:#9a5c20 !important">✦</div><div class="divider-line"></div></div>
     <div class="section-label">Two works that resonate</div>
     <div class="art-grid" id="art-grid"></div>
     <div class="entry-preview" id="entry-preview" style="margin-bottom:1.5rem;padding-top:1rem;border-top:1px solid #e0d8c8;">
@@ -452,7 +455,7 @@ JSON only, no markdown:
   "mirror_who": "Exactly 2 sentences. Same structure as primary_who.",
   "mirror_quote": "Real verified quote, under 30 words",
   "mirror_relationship": "One sentence. Name BOTH thinkers by name — never 'they' or 'both' or 'together'. What becomes visible holding them together.",
-  "expansion": "2 sentences maximum. Name BOTH thinkers by name in the sentences — never 'they both' or 'together they'. Spoken language. Level of the idea only. Does not address the person.",
+  "expansion": "EXACTLY 2 sentences. No more. Name BOTH thinkers by name. Spoken language. Level of the idea only. Does not address the person. If you write a third sentence, delete it.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — the quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
@@ -622,6 +625,13 @@ function toggleEntry(){
   }
 }
 function togglePoetry(){document.getElementById('poetry-block').classList.toggle('open');}
+
+// Force divider star color — override any cached CSS
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.divider-star').forEach(el => {
+    el.style.setProperty('color', '#9a5c20', 'important');
+  });
+});
 
 function goBack(){
   document.getElementById('response').style.display='none';
