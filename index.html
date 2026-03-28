@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260328170856 -->
+<!DOCTYPE html><!-- v20260328174015 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -353,12 +353,12 @@ const RELATIONSHIP_LABELS = {
 };
 
 const EXAMPLES = [
-  "I keep starting projects with so much excitement and then abandoning them halfway through. I don't know if I'm scared of finishing, or if the beginning is just more interesting.",
-  "Had a strange moment this morning — I was watching a spider rebuild its web after the rain destroyed it. It didn't seem bothered at all. I felt something watching it but I can't name what.",
-  "I've been feeling like I'm living a life that looks correct from the outside but doesn't feel like mine from the inside. I don't know when that gap opened up.",
-  "Walked past my childhood home today. The new family had painted it a different color. I stood there longer than made sense.",
-  "It's been grey for days. Not stormy, just grey. I noticed I've been waiting for it to change before I do certain things.",
-  "I've been feeling exhausted — more like I've been performing a version of myself for so long I can't remember what's underneath."
+  "I've got so much to do but I've just been watching movies instead.",
+  "I've been trying to write something for months. Every time I sit down the words feel borrowed, like they belong to someone else.",
+  "I've lived in this city for ten years and I still feel like a visitor. I don't know if that's the city or me.",
+  "I went outside early this morning before anyone was awake. The quality of the light was different.",
+  "I had a conversation with a friend where we were both saying the right things and neither of us was really there.",
+  "My body knew something was wrong before I did. I kept ignoring it and then one day it just stopped."
 ];
 
 const LOADING_TEXTS = ['Going deeper into what you\'ve shared','Listening across traditions','Finding what rhymes with your life','Gathering thought from many worlds','Following the thought wherever it leads'];
@@ -454,27 +454,29 @@ CONCEPT NAME must be identical in opening and concept_name field.
 TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken not written. A curious 17-year-old follows it without losing the depth. Never: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued", "arguing", "spent decades", "spent their life", "devoted their career". Never soften a philosophical claim into advice or comfort.
 
 OPENING — always two moves, two separate sentences:
-MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct.
-MOVE 2 (concept-led): "[Thinker] called this [concept]." e.g. "Bergson called this duration." "Spinoza called this conatus."
-MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]."
+MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct. "The beginning alive. The middle gone quiet." "The body insisting. Not a want — more like weather."
+MOVE 2 (concept-led): "[Thinker] called this [concept]." SHORT. No elaboration. The concept block explains. e.g. "Bergson called this duration." "Goffman called this the front stage." "Spinoza called this conatus."
+MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing — nothing after it.
 
-PHILOSOPHER DESCRIPTIONS — exactly 2 sentences:
-Sentence 1: [Name] was a [tradition word], [one philosophically relevant fact]. NEVER nationality words. NEVER incidental life facts. Only what illuminates their thought.
-Sentence 2: What this entry specifically shares with their work. One concrete clause.
+PHILOSOPHER DESCRIPTIONS — exactly 2 sentences, short:
+Sentence 1: [Name] was a [tradition word], [one fact — what they refused, showed, or built their work around]. One clause only. No elaboration.
+Sentence 2: What this entry shares with their work. Direct. No "What this entry carries is precisely..." — just state it.
 Examples:
 "Bergson was a vitalist who insisted clock time is a fiction — a grid thrown over something alive."
 "Merleau-Ponty was a phenomenologist who refused to separate mind from the body that carries it."
-"Watsuji was a Kyoto School ethicist who refused to separate human existence from climate, season, and the texture of the surrounding world."
+"Han Byung-Chul is a philosopher who diagnosed the exhaustion of societies that replace command with seduction — achievement becomes self-violence."
+"Goffman was a social theorist who showed selfhood is not interior first but performed before audiences we rarely chose."
+"Watsuji was a Kyoto School ethicist who refused to separate human existence from climate, season, and the surrounding world."
 "Nagarjuna was a Madhyamaka philosopher who showed that nothing — not the self, not the moment — has inherent existence."
-"Salmón is a Rarámuri philosopher who holds that humans are not separate from nature but kin within it — the world is not resource but relation."
-"Kimmerer is a Potawatomi botanist and philosopher who showed that the grammar of a language shapes whether the world is full of things or full of beings."
 
 CONCEPT GLOSS — one compressed clause, under 20 words. Precise dictionary style. No interpretation.
 "Duration — Bergson's term for lived time as continuous qualitative flow, not measurable instants."
 "Śūnyatā — Nagarjuna's term for the absence of inherent existence in all phenomena, including the self."
 "Dadirri — Ungunmerr-Baumann's term for deep listening as a way of knowing, prior to speech."
 
-AND FURTHER — EXACTLY 2 sentences. Both thinkers named. Spoken language. Level of the idea only. Does not address the person. Opens a door — does not walk through it for them.
+BRIDGE (mirror_relationship) — one sentence only. 25 words maximum. Names both thinkers. Sharp. What becomes visible holding them together.
+
+AND FURTHER — EXACTLY 2 sentences. Both thinkers named. Short. Spoken. Level of the idea only. Does not address the person.
 
 ARTWORKS — choose two from this curated library. Different traditions. Match quality of experience, not subject matter.
 ${ART_KEYS}
@@ -491,7 +493,7 @@ JSON only, no markdown:
   "mirror_tradition": "Thinker · Tradition",
   "mirror_who": "Exactly 2 sentences. Same structure.",
   "mirror_quote": "Real verified quote, under 30 words",
-  "mirror_relationship": "One sentence. Name BOTH thinkers by name. What becomes visible holding them together.",
+  "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
   "expansion": "EXACTLY 2 sentences. Both thinkers named by name. Spoken language. Level of the idea only. Does not address the person.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — quality of experience this work shares with the entry",
