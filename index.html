@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260328195013 -->
+<!DOCTYPE html><!-- v20260328202920 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -268,7 +268,7 @@ const AIC_WORKS = [
 
 const ART = {};
 const WIKI_FALLBACKS = {
-  'picassoOld': 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/The_Old_Guitarist%2C_late_1903-early_1904_%28Art_Institute_of_Chicago%29.jpg/600px-The_Old_Guitarist%2C_late_1903-early_1904_%28Art_Institute_of_Chicago%29.jpg',
+
   'japanesePines': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/600px-Okyo_pines.jpg',
   'vanGoghBedroom': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg/600px-Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg',
   'greatWave': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/600px-Tsunami_by_hokusai_19th_century.jpg',
@@ -278,6 +278,8 @@ const WIKI_FALLBACKS = {
   'redonEyes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg',
   'redonCyclops': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg',
   'redonFlowers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/600px-Odilon_Redon_-_Vase_of_Flowers.jpg',
+  'dancingDervish': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/446892/preview',
+  'persianGarden': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/451403/preview',
 };
 
 const ART_LOAD_PROMISE = (async () => {
@@ -501,14 +503,14 @@ JSON only, no markdown:
   "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
   "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "Exactly 2 sentences. '[Name] was a [tradition word], [philosophically relevant fact].' Then: what specific territory they share with THIS entry.",
+  "primary_who": "EXACTLY 2 sentences — no more. Sentence 1: '[Name] was a [tradition word], [one fact]'. Sentence 2: one short clause on what this entry shares with their work. If you write a third sentence, delete it.",
   "primary_quote": "Real verified quote, under 35 words",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "Exactly 2 sentences. Same structure.",
+  "mirror_who": "EXACTLY 2 sentences — no more. Same structure as primary_who. If you write a third sentence, delete it.",
   "mirror_quote": "Real verified quote, under 30 words",
   "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
-  "expansion": "EXACTLY 2 sentences. Both thinkers named by name. Spoken language. Level of the idea only. Does not address the person.",
+  "expansion": "EXACTLY 2 sentences — no more, no less. Both thinkers named. Short. Spoken. If you write a third sentence, delete it.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
