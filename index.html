@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260328034228-20260328032447 -->
+<!DOCTYPE html><!-- v20260328154040 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -320,18 +320,24 @@ const ART_LOAD_PROMISE = (async () => {
     } catch(e) { return null; }
   }
 
-  // Load images in parallel for all works
-  await Promise.all(AIC_WORKS.map(async w => {
-    const searchQuery = `${w.artist.split(',')[0]} ${w.title.split('(')[0].trim()}`;
-    // Try Met first, then Wikimedia
-    let imgUrl = await getMetImage(searchQuery) || await getWikiImage(searchQuery);
-    ART[w.key] = {
-      url: imgUrl || null,
-      title: w.title,
-      artist: w.artist,
-      tradition: w.tradition
-    };
-  }));
+  // Load images in staggered batches to avoid rate limiting
+  const batchSize = 8;
+  for (let i = 0; i < AIC_WORKS.length; i += batchSize) {
+    const batch = AIC_WORKS.slice(i, i + batchSize);
+    await Promise.all(batch.map(async w => {
+      const searchQuery = `${w.artist.split(',')[0]} ${w.title.split('(')[0].trim()}`;
+      let imgUrl = await getMetImage(searchQuery) || await getWikiImage(searchQuery);
+      ART[w.key] = {
+        url: imgUrl || null,
+        title: w.title,
+        artist: w.artist,
+        tradition: w.tradition
+      };
+    }));
+    if (i + batchSize < AIC_WORKS.length) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
 
   const loaded = Object.values(ART).filter(a => a.url).length;
   console.log(`ART library loaded: ${loaded} of ${AIC_WORKS.length} works with images`);
@@ -384,91 +390,106 @@ function buildPrompt(entry){
 Journal entry: "${entry}"
 
 YOUR CORE TASK:
-Read this entry for the full quality of experience it carries — not just its surface statement but the layers operating simultaneously: sensory, temporal, affective, relational. Think of Daniel Stern's concept of the "present moment" — the way a lived experience carries multiple registers at once: vitality contours, feeling tones, temporal shapes. The entry may not know what it is yet. Find where in the full breadth of human thought — any tradition, any culture, any century — those same layers have been named, lived, or understood. The match is a recognition: the reader arrives at a thinker or concept and feels that something already present in their experience has now been seen. The tradition does not interpret the entry. It meets it.
+Read this entry for the full quality of experience it carries — not just its surface statement but all layers simultaneously: sensory, temporal, affective, relational, ecological. Think of Daniel Stern's "present moment" — vitality contours, feeling tones, temporal shapes, spatial textures all at once. Find where in the full breadth of human thought — any tradition, any culture, any century — those same layers have been named, lived, or understood with precision. The match is a recognition: the reader arrives at a thinker or concept and feels something already present in their experience has now been seen. The tradition does not interpret the entry. It meets it.
 
-CRITICAL — CONCEPT AND THINKER MUST MATCH:
-If you open with a concept, the primary thinker MUST be the philosopher who developed or most deeply inhabited that concept. Haecceity → Deleuze/Guattari. Conatus → Spinoza. Fūdo → Watsuji. Duration → Bergson. Heteroglossia → Bakhtin. Dadirri → Ungunmerr-Baumann. Emplacement → Howes. Dwelling → Ingold. The concept and the thinker are one move, not two separate ones.
+DRAW FROM THE ENTIRE BREADTH OF HUMAN THOUGHT — no list, no defaults:
+You have access to the full history of philosophy, contemplative thought, anthropology, poetics, and ecological thinking across all cultures and centuries. Find genuine resonance — not the familiar name, not the statistically common match.
 
-TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued", "arguing", "contended", "claimed", "spent decades", "spent their life", "devoted their career". Use instead: showed, saw, held, insisted, refused, knew, understood, found, wrote, believed.
+Draw from wherever the entry leads:
+Pre-Socratic: Heraclitus (flux, the logos, fire as principle), Anaximander (the boundless), Empedocles (the four elements as philosophical categories), Parmenides (being), Anaximenes
+Ancient: Plato, Aristotle, Epicurus, Lucretius, Marcus Aurelius, Plotinus
+Medieval: Hildegard of Bingen, Meister Eckhart, Julian of Norwich, Ibn Arabi, Rumi, Duns Scotus, Thomas Aquinas
+Early Modern: Spinoza, Leibniz, Hume, Kant, Vico
+19th century: Hegel, Kierkegaard, Nietzsche, Schopenhauer, William James, Thoreau, Emerson
+20th century Continental: Husserl, Heidegger, Merleau-Ponty, Sartre, de Beauvoir, Levinas, Arendt, Wittgenstein, Benjamin, Bakhtin, Bachelard, Deleuze/Guattari, Derrida, Foucault, Ricoeur
+Feminist philosophy: Irigaray (elemental materialism — water, air, earth, fire as philosophical categories, not metaphors; Marine Lover, The Forgetting of Air), de Beauvoir, Braidotti, Genevieve Lloyd, Cavarero, Kelly Oliver, Simone Weil (attention as spiritual practice, gravity and grace, affliction)
+Affect theory: Massumi, Kathleen Stewart, Ahmed, Teresa Brennan, Grosz, Barad — Berlant only as genuine last resort
+Ecology/More-than-human: Abram, Toadvine, Haraway, Tsing, Viveiros de Castro, Plumwood
+Anthropology of senses/place: Ingold (always: "anthropologist of skill and dwelling"), Howes (always: "sensory anthropologist"), Stoller
+Black feminist/Diasporic: Lorde, Wynter, hooks, Moten, Mbembe, Glissant, Fanon, Gilroy, Spillers, Hartman
+Contemporary: Han Byung-Chul (achievement society, burnout, the transparency society — deeply relevant to young people today), Paul Virilio, Charles Taylor
+East Asian: Nishida (pure experience, basho), Watsuji (always: "Kyoto School ethicist"), Yuasa, Zhuangzi, Confucius, Mencius, Wang Yangming, the Tao Te Ching
+
+BUDDHIST THOUGHT — draw from the full tradition with philosophical precision, never as wellness:
+Theravada: Pali Canon, anicca (the arising-and-passing of all phenomena, including the observer — not "everything changes"), anattā (non-self), dependent origination (paṭicca-samuppāda), vipassana as epistemology
+Madhyamaka: Nagarjuna's śūnyatā (the absence of inherent existence in all phenomena — not "emptiness of meaning"), Chandrakirti
+Yogācāra: Vasubandhu, vijñaptimātratā (mind-only), ālayavijñāna (storehouse consciousness)
+Zen/Chan: Dōgen (being-time, uji — existence as time, the presencing of things), Huangbo, Linji, Huineng, the koan as philosophical method
+Tibetan: Machig Labdrön (chöd), dzogchen, Longchenpa
+Contemporary Buddhist philosophy: Thich Nhat Hanh (interbeing — nothing exists independently)
+
+Indian philosophy: Upanishads, Advaita Vedanta (Shankara), Yoga Sutras of Patanjali, Kashmir Shaivism (Abhinavagupta), Nagarjuna, Tagore, Krishnamurti
+Islamic philosophy: Ibn Arabi (waḥdat al-wujūd — unity of being), Al-Ghazali, Averroes, Avicenna, Rumi, Hafiz
+African philosophy: Ubuntu (I am because we are — relational ontology), Akan philosophy, Wiredu, Ramose, Buen Vivir, Mbiti
+Indigenous thought — with full philosophical seriousness, never as decoration: Kimmerer, Atleo, Deloria, Ungunmerr-Baumann (dadirri — deep listening as a way of knowing), Coulthard, Simpson, TallBear
+
+CRITICAL PROTECTION AGAINST NEW-AGE FLATTENING:
+Eastern, Buddhist, and Indigenous thought must be presented with the same philosophical rigor as Western thought. Use the actual term in its actual language. Name the actual thinker. State the actual philosophical claim. "Anicca" is not "everything changes" — it is the arising-and-passing of all phenomena including the observer. "Śūnyatā" is not emptiness of meaning — it is the absence of inherent existence. Precision is what protects these traditions from being flattened into wellness culture.
+
+TWO-THINKER LOGIC — the relationship between them is the philosophical heart:
+Primary: meets the entry with precision — offers a handhold, a name for what is already there. Could be Western, Eastern, Indigenous, contemplative — whatever genuinely rhymes most precisely.
+Second: comes from genuinely elsewhere and adds what the first tradition couldn't reach. A different angle on the same truth, or a truth the first missed entirely. Together they should be more true than either alone.
+Examples of genuine pairs:
+Bergson names duration / Dōgen shows even emptiness is time doing something
+Spinoza names conatus / Lorde names what happens when that drive is systematically suppressed
+Merleau-Ponty maps the flesh / Irigaray shows what philosophy forgot about the elemental body
+Watsuji names fūdo / Ingold shows what it means to move through rather than stand within
+
+CONCEPT AND THINKER MUST MATCH:
+Haecceity → Deleuze/Guattari | Conatus → Spinoza | Fūdo → Watsuji | Duration → Bergson | Heteroglossia → Bakhtin | Dadirri → Ungunmerr-Baumann | Emplacement → Howes | Dwelling → Ingold | Śūnyatā → Nagarjuna | Anicca → Theravada/Pali | Interbeing → Thich Nhat Hanh | Opacity → Glissant | Affect → Massumi | Sympoiesis → Haraway
+
+CONCEPT NAME MUST BE IDENTICAL in opening and concept_name field.
+
+TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken not written. A curious 17-year-old follows it without losing the depth. Never: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued", "arguing", "spent decades", "spent their life", "devoted their career". Never soften a philosophical claim into advice or comfort.
 
 OPENING — always two moves, two separate sentences:
-MOVE 1: One simple direct observation of what the entry is carrying. Sensory or temporal. Not a constructed metaphor. Not inside the person's head. Just what is — stated plainly. Example: "The beginning alive. The middle gone quiet before it finished." Or: "The body insisting. Not a want — more like a weather that has moved in." Short. Simple. Direct.
-MOVE 2 (concept-led): "[Thinker] called this [concept]." e.g. "Bergson called this duration." "Spinoza called this conatus." "Howes called this emplacement."
-MOVE 2 (thinker-led): "There is a philosopher whose work rhymes with this. [Name]." Name the discipline when relevant. The name lands as a short final beat on its own.
+MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct. "The beginning alive. The middle gone quiet." "The body insisting. Not a want — more like weather."
+MOVE 2 (concept-led): "[Thinker] called this [concept]." e.g. "Nagarjuna called this śūnyatā." "Bergson called this duration."
+MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]."
 
-PHILOSOPHER DESCRIPTIONS — 2 sentences maximum, tight:
-Sentence 1: [Name] was a [tradition word], [one specific fact]. NEVER EVER use nationality words — not Japanese, not British, not French, not German, not American. The tradition label carries the context. No warm-up phrases. No "spent their life." Just the fact.
-Sentence 2: What this entry shares with their work. One concrete clause. No interpretation of the entry itself.
+PHILOSOPHER DESCRIPTIONS — exactly 2 sentences:
+Sentence 1: [Name] was a [tradition word], [one philosophically relevant fact]. NEVER nationality words (not Japanese, British, French, German, American). NEVER incidental life events (cause of death, personal tragedy). Only what illuminates their thought.
+Sentence 2: What this entry specifically shares with their work. One concrete clause.
 Examples:
 "Bergson was a vitalist who insisted clock time is a fiction — a grid thrown over something alive."
-"Watsuji was a Kyoto School ethicist who refused to separate human existence from the climate, season, and texture of the world around it."
-"Ingold was an anthropologist of skill and dwelling who held that human life is not lived on the surface of the world but woven through it."
-"Spinoza was a lens grinder, a rationalist, expelled from Amsterdam for refusing to separate God from nature."
-"Goffman was a sociologist, trained at Chicago, who showed that social life is structured by performance."
+"Nagarjuna was a Madhyamaka philosopher who showed that nothing — not the self, not the moment, not the thought — has inherent existence."
+"Irigaray was a feminist philosopher who held that Western thought had forgotten the elements — water, air, earth, and fire as the actual medium of existence, not metaphors."
+"Watsuji was a Kyoto School ethicist who refused to separate human existence from climate, season, and the texture of the surrounding world."
+"Ingold was an anthropologist of skill and dwelling who held that life is not lived on the surface of the world but woven through it."
+"Merleau-Ponty was a phenomenologist who refused to separate mind from the body that carries it."
 
-WATSUJI SPECIFICALLY: Always "Kyoto School ethicist" — never "Japanese philosopher." The Kyoto School is Japan's first original school of philosophy, working at the intersection of Western phenomenology and Buddhist/Confucian thought.
-INGOLD SPECIFICALLY: Always "anthropologist of skill and dwelling" — never "British anthropologist."
-HOWES SPECIFICALLY: Always "sensory anthropologist" — never "Canadian anthropologist" or just "anthropologist."
-
-CRITICAL — CONCEPT NAME CONSISTENCY:
-The term named in Move 2 of the opening ("Goffman called this X") MUST be the exact same term used in concept_name. Never use one name in the opening and a different name in the concept block. If the opening says "performance of self" the concept_name must say "PERFORMANCE OF SELF" — not "presentation of self" or any variation.
-
-CONCEPT GLOSS — one compressed clause, under 20 words. Like a precise dictionary entry. No interpretation beyond the definition.
-Examples:
-"Opacity — Glissant's word for the right to remain unknowable, not fully transparent to others."
+CONCEPT GLOSS — one compressed clause, under 20 words. Precise dictionary style. No interpretation beyond definition.
+"Śūnyatā — Nagarjuna's term for the absence of inherent existence in all phenomena, including the self."
+"Anicca — the Pali term for the arising-and-passing of all phenomena, including the one who notices."
 "Duration — Bergson's term for lived time as continuous qualitative flow, not measurable instants."
-"Conatus — Spinoza's word for the drive in every living thing to persist and go on being."
 
-FULL RANGE OF THINKERS — the entry decides who leads, not habit or frequency:
-Continental: Spinoza, Bergson, Heidegger, Nietzsche, Merleau-Ponty, Bachelard, de Beauvoir, Wittgenstein, Benjamin, Bakhtin, Deleuze/Guattari, Husserl, Sartre, Arendt, Levinas
-American: James, Thoreau, Dewey
-Affect/Embodiment (in order of preference): Massumi, Kathleen Stewart, Ahmed, Braidotti, Teresa Brennan, Grosz, Barad, Deleuze/Guattari — and only if nothing else fits: Berlant
-Spinoza specialists: Genevieve Lloyd (The Man of Reason, Spinoza's ethics, reason and gender)
-Ecology/More-than-human: Abram, Toadvine, Haraway, Tsing, Viveiros de Castro
-Anthropology of senses/place: Tim Ingold (dwelling, wayfaring, skill, animate earth), David Howes (emplacement, sensory anthropology), Paul Stoller (sensory ethnography)
-Black feminist/Diasporic: Lorde, Wynter, hooks, Moten, Mbembe, Glissant, Fanon, Gilroy
-East Asian: Nishida, Watsuji, Yuasa, Zhuangzi, Nagarjuna, Dōgen, Ibn Rushd, Confucius
-Indigenous: Kimmerer, Atleo, Deloria, Ungunmerr-Baumann, Coulthard, Simpson, TallBear, Ubuntu, Buen Vivir
-Contemplative: Thich Nhat Hanh, Machig Labdrön, Mirabai
+AND FURTHER — EXACTLY 2 sentences. Both thinkers named. Spoken language. Level of the idea only. Does not address the person. Opens a door — does not walk through it for them.
 
-Do not default to the same thinkers. Do not reach for Berlant unless no other thinker fits more precisely.
-
-CONCEPTS (concept and primary thinker must match):
-haecceity → Deleuze/Guattari | conatus → Spinoza | heteroglossia → Bakhtin | duration → Bergson | affect → Massumi | opacity → Glissant | fūdo → Watsuji | interbeing → Thich Nhat Hanh | sympoiesis → Haraway | dadirri → Ungunmerr-Baumann | cruel optimism → Berlant | grievability → Butler | emplacement → Howes | dwelling → Ingold | flesh/chair → Merleau-Ponty | mono no aware → Japanese aesthetics | ubuntu → African philosophy | becoming → Deleuze/Guattari | the fold → Deleuze
-
-SECOND THINKER — different tradition, not opposition:
-- convergence: arriving at the same territory from different directions
-- deepening: one takes the other further than it could reach alone
-- expansion: adds a dimension the first tradition entirely missed
-- feminist resonance: names what the first saw but couldn't say
-
-AND FURTHER — 2 sentences maximum. Both thinkers named. Plain spoken language — one sentence sensory or image-based, one sentence the philosophical turn. Stays at the level of the idea. Does not comment on or affirm the person's specific situation. Does not tell them what their experience means. Opens a door, does not walk through it on their behalf. Never: "Maybe that's just..." or "Perhaps you are..." Example register: "Bergson heard the felt quality of experience — its intensity, its vitality — peaks, then thins. Zhuangzi would add: the question was never whether you finished, but whether you were following the grain at all."
-
-ARTWORKS — choose two from this curated library. Different traditions. Match the quality of experience, not just the subject.
+ARTWORKS — choose two from this curated library. Different traditions. Match quality of experience, not subject matter.
 ${ART_KEYS}
 
 JSON only, no markdown:
 {
-  "resonance": "Two sentences. Sentence 1: sharp sensory observation of what the entry carries. Sentence 2: '[Thinker] called this [concept].' OR 'There is a [philosopher/anthropologist/poet] whose work rhymes with this. [Name].' Together under 40 words.",
-  "concept_name": "Concept term if concept-led — MUST match primary thinker. Else empty string.",
-  "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. Format: '[Concept] — [thinker]'s word/term for [definition].' No interpretation beyond the definition.",
+  "resonance": "Two sentences. Sentence 1: direct sensory observation of what the entry carries. Sentence 2: '[Thinker] called this [concept].' OR 'There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name].' Together under 40 words.",
+  "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
+  "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "Exactly 2 sentences. Structure: '[Name] was a [tradition word], [specific biographical fact].' Then: what specific territory they share with THIS entry.",
+  "primary_who": "Exactly 2 sentences. '[Name] was a [tradition word], [philosophically relevant fact].' Then: what specific territory they share with THIS entry.",
   "primary_quote": "Real verified quote, under 35 words",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "Exactly 2 sentences. Same structure as primary_who.",
+  "mirror_who": "Exactly 2 sentences. Same structure.",
   "mirror_quote": "Real verified quote, under 30 words",
-  "mirror_relationship": "One sentence. Name BOTH thinkers by name — never 'they' or 'both' or 'together'. What becomes visible holding them together.",
-  "expansion": "EXACTLY 2 sentences. No more. Name BOTH thinkers by name. Spoken language. Level of the idea only. Does not address the person. If you write a third sentence, delete it.",
+  "mirror_relationship": "One sentence. Name BOTH thinkers by name. What becomes visible holding them together.",
+  "expansion": "EXACTLY 2 sentences. Both thinkers named by name. Spoken language. Level of the idea only. Does not address the person.",
   "artwork1_key": "key from library",
-  "artwork1_why": "One sentence — the quality of experience this work shares with the entry",
+  "artwork1_why": "One sentence — quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
-  "artwork2_why": "One sentence — the quality of experience this work shares with the entry",
-  "poem_text": "3-5 lines — real poem, genuine resonance",
+  "artwork2_why": "One sentence — quality of experience this work shares with the entry",
+  "poem_text": "3-5 lines — real poem from any tradition, genuine resonance",
   "poem_attribution": "Poet · tradition",
   "poem_source": "Title and date"
-}`;
+}\`;
 }
 
 async function reflect(){
