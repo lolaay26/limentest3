@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Limen — Go deeper.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 /* ── UNIFIED SUBHEADING SYSTEM ─────────────────────────────────── */
 :root {
@@ -12,11 +15,11 @@
   --sub-space: 0.18em;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#f5f4ee; font-family:Georgia,'Times New Roman',serif; color:#1c1810; min-height:100vh; }
+body { background:#f4f3ee; font-family:'EB Garamond',Georgia,'Times New Roman',serif; color:#1c1810; min-height:100vh; }
 header { padding:1.8rem 2.5rem 1.4rem; border-bottom:1px solid #e0d8c8; display:flex; align-items:baseline; gap:1.2rem; }
 .logo { font-size:1.7rem; letter-spacing:0.22em; font-weight:300; }
 .tagline { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.28em; text-transform:uppercase; color:#b8975a; font-style:italic; }
-main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f5f4ee; }
+main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f4f3ee; }
 .key-section { background:#faf7f0; border:1px solid #e0d8c8; padding:1.2rem 1.5rem; margin-bottom:2rem; }
 .key-label { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.25em; text-transform:uppercase; color:#9a8e7e; margin-bottom:0.5rem; display:block; }
 .key-row { display:flex; gap:0.6rem; }
@@ -26,22 +29,22 @@ main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f
 .key-status { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:#4a7a5a; margin-top:0.4rem; }
 .date-line { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#9a8e7e; margin-bottom:0.6rem; }
 .prompt { font-size:1.45rem; font-style:italic; font-weight:300; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
-textarea { width:100%; min-height:180px; background:#faf7f0; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:Georgia,serif; font-size:1.05rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
+textarea { width:100%; min-height:180px; background:#faf7f0; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
 textarea:focus { border-color:#b8975a; }
 .btn-reflect { margin-top:1rem; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2.2rem; cursor:pointer; }
 .btn-reflect:hover { background:#8b3a2a; }
 .error { margin-top:0.8rem; color:#8b3a2a; font-style:italic; font-size:0.9rem; padding:0.7rem 1rem; border:1px solid rgba(139,58,42,0.2); background:rgba(139,58,42,0.04); }
 .examples-section { margin-top:2.5rem; padding-top:2rem; border-top:1px solid #e0d8c8; }
 .section-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:1rem; font-weight:500; }
-.example-btn { display:block; width:100%; text-align:left; background:#faf7f0; border:1px solid #e0d8c8; padding:0.85rem 1.2rem; cursor:pointer; font-family:Georgia,serif; font-style:italic; font-size:0.9rem; color:#4a4035; line-height:1.55; margin-bottom:0.6rem; }
+.example-btn { display:block; width:100%; text-align:left; background:#faf7f0; border:1px solid #e0d8c8; padding:0.85rem 1.2rem; cursor:pointer; font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-style:italic; font-size:0.9rem; color:#4a4035; line-height:1.55; margin-bottom:0.6rem; }
 .example-btn:hover { border-color:#b8975a; }
 #loading { display:none; text-align:center; padding:5rem 2rem; }
 .loading-text { font-style:italic; font-size:1.1rem; color:#9a8e7e; margin-bottom:1.8rem; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
-.resonance-line1 { font-family:sans-serif; font-size:0.95rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; letter-spacing:0.02em; }
-.resonance-line2 { font-family:sans-serif; font-size:0.95rem; font-style:normal; font-weight:400; line-height:1.7; color:#9a5c20; margin-bottom:1.8rem; letter-spacing:0.02em; }
+.resonance-line1 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:600; line-height:1.7; color:#9a5c20; margin-bottom:0.5rem; }
+.resonance-line2 { font-family:'EB Garamond',Georgia,'Times New Roman',serif; font-size:1.2rem; font-style:normal; font-weight:600; line-height:1.7; color:#9a5c20; margin-bottom:1.8rem; }
 /* Concept block */
 .concept-block { background:#f7f3ea; border:1px solid #e0d8c8; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
 .concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:0.5rem; font-weight:600; text-transform:uppercase; }
@@ -60,7 +63,7 @@ textarea:focus { border-color:#b8975a; }
 .expansion-text { font-size:0.98rem; font-style:italic; color:#5a4e3e; line-height:1.85; }
 .divider { display:flex; align-items:center; gap:1rem; margin:1.6rem 0; }
 .divider-line { flex:1; height:1px; background:#e0d8c8; }
-.divider-star { color:#9a5c20; font-size:1.1rem; }
+.divider-star { color:#9a5c20; }
 .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
 .art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
 .art-card img { width:100%; height:300px; object-fit:contain; display:block; background:#f8f5f0; }
@@ -380,7 +383,7 @@ Read this entry for the full quality of experience it carries — not just its s
 CRITICAL — CONCEPT AND THINKER MUST MATCH:
 If you open with a concept, the primary thinker MUST be the philosopher who developed or most deeply inhabited that concept. Haecceity → Deleuze/Guattari. Conatus → Spinoza. Fūdo → Watsuji. Duration → Bergson. Heteroglossia → Bakhtin. Dadirri → Ungunmerr-Baumann. Emplacement → Howes. Dwelling → Ingold. The concept and the thinker are one move, not two separate ones.
 
-TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued".
+TONE: Warm, direct, learned. Not therapeutic, not academic. Short sentences. The ideas can be sophisticated — the language should feel spoken, not written. A curious 17-year-old should follow it without losing the depth. Never use: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued", "arguing", "contended", "claimed", "spent decades", "spent their life", "devoted their career". Use instead: showed, saw, held, insisted, refused, knew, understood, found, wrote, believed.
 
 OPENING — always two moves, two separate sentences:
 MOVE 1: One simple direct observation of what the entry is carrying. Sensory or temporal. Not a constructed metaphor. Not inside the person's head. Just what is — stated plainly. Example: "The beginning alive. The middle gone quiet before it finished." Or: "The body insisting. Not a want — more like a weather that has moved in." Short. Simple. Direct.
@@ -442,8 +445,8 @@ JSON only, no markdown:
   "mirror_tradition": "Thinker · Tradition",
   "mirror_who": "Exactly 2 sentences. Same structure as primary_who.",
   "mirror_quote": "Real verified quote, under 30 words",
-  "mirror_relationship": "One sentence. What becomes visible holding both together.",
-  "expansion": "2 sentences maximum. Both thinkers named. Spoken language. Level of the idea only. Does not address the person.",
+  "mirror_relationship": "One sentence. Name BOTH thinkers by name — never 'they' or 'both' or 'together'. What becomes visible holding them together.",
+  "expansion": "2 sentences maximum. Name BOTH thinkers by name in the sentences — never 'they both' or 'together they'. Spoken language. Level of the idea only. Does not address the person.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — the quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
