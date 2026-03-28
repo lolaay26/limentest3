@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260328190402 -->
+<!DOCTYPE html><!-- v20260328191912 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,7 +13,7 @@
 <style>
 /* ── UNIFIED SUBHEADING SYSTEM ─────────────────────────────────── */
 :root {
-  --sub: #8a6a30;
+  --sub: #8a6a30;  /* dark gold for labels */
   --sub-size: 0.68rem;
   --sub-space: 0.18em;
 }
@@ -50,22 +50,22 @@ textarea:focus { border-color:#b8975a; }
 .resonance-line2 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.05rem; font-style:normal; font-weight:500; line-height:1.5; color:#9a5c20; margin-bottom:1.8rem; text-align:left; }
 /* Concept block */
 .concept-block { background:#ffffff; border:1px solid #ddd3c0; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
-.concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:0.5rem; font-weight:600; text-transform:uppercase; }
+.concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:#8a6a30; margin-bottom:0.5rem; font-weight:700; text-transform:uppercase; }
 .concept-gloss { font-size:0.95rem; line-height:1.8; color:#1c1810; font-style:normal; }
-.phil-block { background:#faf5ee; border:1px solid #ddd3c0; border-left:3px solid #b8975a; padding:1.3rem 1.7rem; }
-.phil-block.mirror { border-left-color:#8a7a5a; border-top:1px solid #e0d8c8; }
+.phil-block { background:#faf5ee; border:1px solid #ddd3c0; border-left:3px solid #9a5c20; padding:1.3rem 1.7rem; }
+.phil-block.mirror { border-left-color:#9a5c20; border-top:none; }
 .tradition { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
 .tradition.mt { color:var(--sub); }
 .phil-text { font-size:0.95rem; line-height:1.85; color:#1c1810; margin-bottom:0.8rem; }
 .phil-quote { font-size:0.97rem; font-style:italic; color:#1c1810; border-left:2px solid #ddd3c0; padding-left:1rem; line-height:1.75; }
-.bridge { background:#efd4a8; border:1px solid #cba870; padding:1rem 1.7rem; }
+.bridge { background:#efd4a8; border:1px solid #9a5c20; padding:1rem 1.7rem; }
 .bridge-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
 .bridge-text { font-size:0.95rem; line-height:1.8; color:#1c1810; font-style:normal; }
 .expansion { padding:1.2rem 1.4rem; margin-bottom:2rem; border-top:1px solid #e0d8c8; border-bottom:1px solid #e0d8c8; }
 .expansion-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
 .expansion-text { font-size:0.95rem; font-style:normal; color:#1c1810; line-height:1.85; }
 .divider { display:flex; align-items:center; gap:1rem; margin:1.6rem 0; }
-.divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.4; }
+.divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.5; }
 .divider-star { color:#9a5c20 !important; }
 .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
 .art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
