@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260328210332 -->
+<!DOCTYPE html><!-- v20260330151014 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -31,7 +31,7 @@ main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f
 .key-btn { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.6rem 1rem; cursor:pointer; white-space:nowrap; }
 .key-status { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:#4a7a5a; margin-top:0.4rem; }
 .date-line { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#9a8e7e; margin-bottom:0.6rem; }
-.prompt { font-size:1.45rem; font-style:normal; font-weight:400; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
+.prompt { font-size:0.97rem; font-style:normal; font-weight:400; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
 textarea { width:100%; min-height:180px; background:#faf5ee; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
 textarea:focus { border-color:#b8975a; }
 .btn-reflect { margin-top:1rem; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2.2rem; cursor:pointer; }
@@ -42,7 +42,7 @@ textarea:focus { border-color:#b8975a; }
 .example-btn { display:block; width:100%; text-align:left; background:#ffffff; border:1px solid #e0d8c8; padding:0.85rem 1.2rem; cursor:pointer; font-family:'Lora',Georgia,'Times New Roman',serif; font-style:normal; font-size:0.95rem; color:#4a4035; line-height:1.55; margin-bottom:0.6rem; }
 .example-btn:hover { border-color:#b8975a; }
 #loading { display:none; text-align:center; padding:5rem 2rem; }
-.loading-text { font-style:italic; font-size:1.1rem; color:#9a8e7e; margin-bottom:1.8rem; }
+.loading-text { font-style:italic; font-size:1rem; color:#c07838; opacity:0.75; margin-bottom:1.8rem; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
@@ -82,6 +82,33 @@ textarea:focus { border-color:#b8975a; }
 .poetry-toggle:hover { color:#b8975a; border-color:#b8975a; }
 .poetry-block { display:none; margin-top:1.8rem; padding:2.5rem; background:#1c1810; color:#f5f0e8; position:relative; text-align:left; }
 .poetry-block.open { display:block; }
+
+/* Animation */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation: fadeUp 0.6s ease forwards; }
+.hidden { opacity:0; pointer-events:none; }
+
+/* Reveal button */
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.tradition-bridge-text {
+  display:none;
+  text-align:center;
+  padding:1.4rem 0 0.8rem;
+  font-family:sans-serif;
+  font-size:0.62rem;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:#9a5c20;
+  animation: breathe 3.5s ease-in-out infinite;
+  border-top:1px solid #e0d8c8;
+  margin-top:0.5rem;
+}
 .poem-text { font-size:1.18rem; font-style:italic; line-height:2.2; color:#f5f0e8; margin-bottom:1.3rem; white-space:pre-line; }
 .poem-attr { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#c8a860; margin-bottom:0.3rem; font-weight:500; }
 .poem-src { font-style:italic; font-size:0.92rem; color:rgba(245,240,232,0.6); }
@@ -100,7 +127,7 @@ textarea:focus { border-color:#b8975a; }
   .bridge { padding:0.8rem 1.2rem; }
   .expansion { padding:1rem 1.2rem; }
   textarea { font-size:1rem; padding:1rem 1.2rem; }
-  .prompt { font-size:1.25rem; }
+  .prompt { font-size:0.97rem; }
   .resonance-line1, .resonance-line2 { font-size:1rem; }
   .btn-reflect { width:100%; text-align:center; padding:1rem; }
 }
@@ -180,11 +207,12 @@ textarea:focus { border-color:#b8975a; }
       <div class="phil-text" id="primary-who"></div>
       <div class="phil-quote" id="primary-quote"></div>
     </div>
-    <div class="bridge">
+    <div class="tradition-bridge-text" id="reveal-btn">But there is more. Another tradition has always known this too.</div>
+    <div class="bridge" id="bridge-block" style="display:none;">
       <div class="bridge-label" id="relationship-label"></div>
       <div class="bridge-text" id="mirror-relationship"></div>
     </div>
-    <div class="phil-block mirror">
+    <div class="phil-block mirror" id="mirror-block" style="display:none;">
       <div class="tradition mt" id="mirror-tradition"></div>
       <div class="phil-text" id="mirror-who"></div>
       <div class="phil-quote" id="mirror-quote"></div>
@@ -193,6 +221,7 @@ textarea:focus { border-color:#b8975a; }
       <div class="expansion-label">And further —</div>
       <div class="expansion-text" id="expansion-text"></div>
     </div>
+    <div id="lower-section" style="display:none;">
     <div class="divider"><div class="divider-line"></div><div class="divider-star"><svg width="10" height="10" viewBox="0 0 10 10" style="display:inline-block;vertical-align:middle;"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#9a5c20"/></svg></div><div class="divider-line"></div></div>
     <div class="section-label">Two works that resonate</div>
     <div class="art-grid" id="art-grid"></div>
@@ -469,7 +498,7 @@ Medieval: Hildegard of Bingen, Meister Eckhart, Julian of Norwich, Ibn Arabi, Ru
 Early modern: Spinoza, Hume, Kant, Vico, Leibniz
 19th century: Hegel, Kierkegaard, Nietzsche, Schopenhauer, William James, Thoreau, Emerson
 20th century Continental: Husserl, Heidegger, Merleau-Ponty, Sartre, de Beauvoir, Levinas, Arendt, Wittgenstein, Benjamin, Bakhtin, Bachelard, Bergson, Derrida, Foucault, Ricoeur
-Contemporary: Han Byung-Chul (achievement society, burnout, transparency), Simone Weil (attention, gravity and grace, affliction), Goffman, Bourdieu, Taylor
+Contemporary: Han Byung-Chul (achievement society, burnout, transparency), Simone Weil (attention, gravity and grace, affliction), Charles Taylor — Goffman and Bourdieu are sociologists of mechanism, not philosophers of existence: use only as last resort when nothing else fits more precisely
 
 BOTH FIRST AND SECOND (depending on genuine fit):
 Deleuze/Guattari — can open when the entry is genuinely about flux, becoming, multiplicity. If they open, pair with something grounding as second. Never open with them for mystical or ecological entries.
@@ -517,7 +546,7 @@ TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken 
 OPENING — always two moves, two separate sentences:
 Read the entry on all registers simultaneously — sensory, temporal, affective, relational — before deciding how to open. Then ask: is what rhymes here a word, or a whole way of inhabiting, understanding, and reflecting on the world? Lead with a concept only when the concept itself is the most precise meeting point — when the word names something the entry is carrying that no thinker's name alone could name as exactly. If the thinker's entire orientation is the meeting point — their sensibility, their territory, the texture of their thought — lead with the thinker. Let the entry decide.
 MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct.
-MOVE 2 (concept-led): "[Thinker] called this [concept]." SHORT. No elaboration. The concept block explains.
+MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS AFTER THE THINKER'S NAME. No elaboration whatsoever. e.g. "Bergson called this duration." "Han called this Müdigkeit." The concept block does all the explaining — this line is only the name.
 MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing — nothing after it.
 
 PHILOSOPHER DESCRIPTIONS — exactly 2 sentences, short:
@@ -549,14 +578,14 @@ JSON only, no markdown:
   "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
   "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "EXACTLY 2 sentences — no more. Sentence 1: '[Name] was a [tradition word], [one fact]'. Sentence 2: one short clause on what this entry shares with their work. If you write a third sentence, delete it.",
-  "primary_quote": "Real verified quote, under 35 words",
+  "primary_who": "EXACTLY 2 sentences — no more, no exceptions. Sentence 1: '[Name] was a [tradition word] who [one verb clause — what they refused, showed, or insisted]'. NO biographical details, NO 'spent their life', NO 'built his entire work'. Sentence 2: ONE short clause — what specific territory this entry shares with their work. Do not explain the entry. Do not interpret. Just name the shared territory.",
+  "primary_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only. If the quote is longer than 20 words, find a shorter one or use just the most essential phrase.",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "EXACTLY 2 sentences — no more. Same structure as primary_who. If you write a third sentence, delete it.",
-  "mirror_quote": "Real verified quote, under 30 words",
+  "mirror_who": "EXACTLY 2 sentences — no more, no exceptions. Same strict structure as primary_who.",
+  "mirror_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only.",
   "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
-  "expansion": "EXACTLY 2 sentences — no more, no less. Both thinkers named. Short. Spoken. If you write a third sentence, delete it.",
+  "expansion": "EXACTLY 2 sentences. Both thinkers named. Stays entirely at the level of the ideas — never addresses the person, never says 'you' or 'your', never interprets what the entry means for the person. Opens a door, does not walk through it on their behalf.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
@@ -566,6 +595,47 @@ JSON only, no markdown:
   "poem_source": "Title and date"
 }`;
 }
+function revealSecondTradition(){
+  const btn = document.getElementById('reveal-btn');
+  if (btn) { btn.style.transition = 'opacity 0.5s ease'; btn.style.opacity = '0'; setTimeout(() => btn.style.display = 'none', 500); }
+
+  function fadeShow(id, delay) {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = 'block';
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.7s ease';
+      setTimeout(() => { el.style.opacity = '1'; }, 50);
+    }, delay);
+  }
+
+  fadeShow('bridge-block', 500);
+  fadeShow('mirror-block', 6500);  // 6s after bridge
+
+  // expansion after mirror
+  setTimeout(() => {
+    const exp = document.getElementById('expansion-block');
+    if (exp && exp.getAttribute('data-has-content') === '1') {
+      exp.style.display = 'block';
+      exp.style.opacity = '0';
+      exp.style.transition = 'opacity 1.0s ease';
+      setTimeout(() => { exp.style.opacity = '1'; }, 50);
+    }
+  }, 16000);
+
+  // art and poem
+  setTimeout(() => {
+    const lower = document.getElementById('lower-section');
+    if (lower) {
+      lower.style.display = 'block';
+      lower.style.opacity = '0';
+      lower.style.transition = 'opacity 1.0s ease';
+      setTimeout(() => { lower.style.opacity = '1'; }, 50);
+    }
+  }, 19500);
+}
+
 async function reflect(){
   const text=document.getElementById('journal-input').value.trim();
   if(text.length<20){showError('Write a little more before reflecting.');return;}
@@ -579,7 +649,7 @@ async function reflect(){
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:buildPrompt(text)}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:buildPrompt(text)}]})
     });
     const data=await res.json();
     if(!res.ok) throw new Error(data.error?.message||'API error '+res.status);
@@ -587,7 +657,7 @@ async function reflect(){
     const s=raw.indexOf('{'),e=raw.lastIndexOf('}');
     if(s===-1) throw new Error('No JSON in response');
     const d=JSON.parse(raw.slice(s,e+1));
-    if(!d.resonance) throw new Error('Incomplete response');
+    if(!d.resonance) throw new Error('Invalid response format');
     clearInterval(loadingInterval);
     renderResponse(text,d);
   }catch(err){
@@ -644,8 +714,8 @@ async function renderResponse(entry,d){
   document.getElementById('mirror-who').textContent=d.mirror_who;
   document.getElementById('mirror-quote').textContent=d.mirror_quote;
 
-  if(d.expansion?.trim()){document.getElementById('expansion-block').style.display='block';document.getElementById('expansion-text').textContent=d.expansion;}
-  else{document.getElementById('expansion-block').style.display='none';}
+  if(d.expansion?.trim()){document.getElementById('expansion-text').textContent=d.expansion; document.getElementById('expansion-block').style.display='none'; document.getElementById('expansion-block').setAttribute('data-has-content','1');}
+  else{document.getElementById('expansion-block').style.display='none'; document.getElementById('expansion-block').setAttribute('data-has-content','0');}
 
   const grid=document.getElementById('art-grid');
   grid.innerHTML='';
@@ -708,6 +778,44 @@ async function renderResponse(entry,d){
   document.getElementById('poem-src').textContent=d.poem_source;
   document.getElementById('poetry-block').classList.remove('open');
   document.getElementById('response').style.display='block';
+
+  // Sequential fade-in — slow and deliberate
+  const conceptExists = !!(d.concept_name?.trim());
+  const LINE_STEP = 4000;    // 4s between opening lines
+  const CONCEPT_STEP = 8000; // 8s on concept box
+  const BOX_STEP = 11000;    // 11s on philosopher box — long enough to read
+
+  function fadeIn(id, delay, duration) {
+    const el = document.getElementById(id);
+    if (!el) return 0;
+    if (el.style.display === 'none' && id !== 'concept-block') return 0;
+    el.style.opacity = '0';
+    el.style.transition = `opacity ${duration||1.0}s ease`;
+    setTimeout(() => { el.style.opacity = '1'; }, delay);
+    return delay;
+  }
+
+  let d2 = 0;
+  fadeIn('resonance-line1', d2, 0.9); d2 += LINE_STEP;
+  fadeIn('resonance-line2', d2, 0.9); d2 += LINE_STEP + 500;
+  if (conceptExists) { fadeIn('concept-block', d2, 1.0); d2 += CONCEPT_STEP; }
+  fadeIn('primary-block', d2, 1.0); d2 += BOX_STEP;
+
+  // Show breathing text
+  setTimeout(() => {
+    const bridge = document.getElementById('reveal-btn');
+    if (bridge) {
+      bridge.style.display = 'block';
+      bridge.style.opacity = '0';
+      bridge.style.transition = 'opacity 1.2s ease';
+      setTimeout(() => { bridge.style.opacity = '0.6'; }, 100);
+    }
+  }, d2 + 500);
+
+  // Auto-reveal after 10s of breathing
+  setTimeout(() => {
+    revealSecondTradition();
+  }, d2 + 10500);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
