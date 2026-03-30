@@ -1,0 +1,849 @@
+<!DOCTYPE html><!-- v20260330143934 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limen — Go deeper.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── UNIFIED SUBHEADING SYSTEM ─────────────────────────────────── */
+:root {
+  --sub: #8a6a30;  /* dark gold for labels */
+  --sub-size: 0.68rem;
+  --sub-space: 0.18em;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#ffffff; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.05rem; color:#1c1810; min-height:100vh; }
+header { padding:1.8rem 2.5rem 1.4rem; border-bottom:1px solid #e0d8c8; display:flex; align-items:baseline; gap:1.2rem; }
+.logo { font-size:1.7rem; letter-spacing:0.22em; font-weight:300; }
+.tagline { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.28em; text-transform:uppercase; color:#b8975a; font-style:italic; }
+main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#ffffff; }
+.key-section { background:#ffffff; border:1px solid #e0d8c8; padding:1.2rem 1.5rem; margin-bottom:2rem; }
+.key-label { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.25em; text-transform:uppercase; color:#9a8e7e; margin-bottom:0.5rem; display:block; }
+.key-row { display:flex; gap:0.6rem; }
+.key-input { flex:1; font-family:monospace; font-size:0.8rem; padding:0.6rem 0.8rem; border:1px solid #e0d8c8; background:#f5f0e8; color:#1c1810; outline:none; }
+.key-input:focus { border-color:#b8975a; }
+.key-btn { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.6rem 1rem; cursor:pointer; white-space:nowrap; }
+.key-status { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:#4a7a5a; margin-top:0.4rem; }
+.date-line { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#9a8e7e; margin-bottom:0.6rem; }
+.prompt { font-size:1.45rem; font-style:normal; font-weight:400; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
+textarea { width:100%; min-height:180px; background:#faf5ee; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
+textarea:focus { border-color:#b8975a; }
+.btn-reflect { margin-top:1rem; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2.2rem; cursor:pointer; }
+.btn-reflect:hover { background:#8b3a2a; }
+.error { margin-top:0.8rem; color:#8b3a2a; font-style:italic; font-size:0.9rem; padding:0.7rem 1rem; border:1px solid rgba(139,58,42,0.2); background:rgba(139,58,42,0.04); }
+.examples-section { margin-top:2.5rem; padding-top:2rem; border-top:1px solid #e0d8c8; }
+.section-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:1rem; font-weight:500; }
+.example-btn { display:block; width:100%; text-align:left; background:#ffffff; border:1px solid #e0d8c8; padding:0.85rem 1.2rem; cursor:pointer; font-family:'Lora',Georgia,'Times New Roman',serif; font-style:normal; font-size:0.95rem; color:#4a4035; line-height:1.55; margin-bottom:0.6rem; }
+.example-btn:hover { border-color:#b8975a; }
+#loading { display:none; text-align:center; padding:5rem 2rem; }
+.loading-text { font-style:italic; font-size:1.1rem; color:#9a8e7e; margin-bottom:1.8rem; }
+.dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
+#response { display:none; }
+/* Opening — two lines, warm dark gold, inviting */
+.resonance-line1 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:0.97rem; font-style:normal; font-weight:400; line-height:1.5; color:#1c1810; margin-bottom:0.4rem; text-align:left; }
+.resonance-line2 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:0.97rem; font-style:normal; font-weight:500; line-height:1.5; color:#9a5c20; margin-bottom:1.8rem; text-align:left; }
+/* Concept block */
+.concept-block { background:#ffffff; border:1px solid #ddd3c0; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
+.concept-name { font-family:sans-serif; font-size:0.82rem; letter-spacing:0.22em; color:#8a6a30; margin-bottom:0.5rem; font-weight:700; text-transform:uppercase; }
+.concept-gloss { font-size:0.95rem; line-height:1.8; color:#8a6a30; font-style:normal; font-weight:600; }
+.phil-block { background:#faf5ee; border:1px solid #ddd3c0; border-left:3px solid #9a5c20; padding:1.3rem 1.7rem; }
+.phil-block.mirror { border-left-color:#9a5c20; border-top:none; }
+.tradition { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
+.tradition.mt { color:var(--sub); }
+.phil-text { font-size:0.95rem; line-height:1.85; color:#1c1810; margin-bottom:0.8rem; }
+.phil-quote { font-size:0.97rem; font-style:italic; color:#1c1810; border-left:2px solid #ddd3c0; padding-left:1rem; line-height:1.75; }
+.bridge { background:#efd4a8; border:1px solid #9a5c20; padding:1rem 1.7rem; }
+.bridge-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
+.bridge-text { font-size:0.95rem; line-height:1.8; color:#1c1810; font-style:normal; }
+.expansion { padding:1.2rem 1.4rem; margin-bottom:2rem; border-top:1px solid #e0d8c8; border-bottom:1px solid #e0d8c8; }
+.expansion-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
+.expansion-text { font-size:0.95rem; font-style:normal; color:#1c1810; line-height:1.85; }
+.divider { display:flex; align-items:center; gap:1rem; margin:1.6rem 0; }
+.divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.5; }
+.divider-star { color:#9a5c20 !important; }
+.art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
+.art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
+.art-card img { width:100%; height:300px; object-fit:contain; display:block; background:#f8f5f0; }
+.art-ph { height:300px; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
+.art-ph-t { font-style:italic; font-size:0.95rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
+.art-ph-s { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); }
+.art-meta { padding:1rem 1.2rem; border-top:1px solid #e0d8c8; }
+.art-title { font-style:italic; font-size:1rem; color:#1c1810; margin-bottom:0.3rem; }
+.art-artist { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
+.art-why { font-size:0.95rem; color:#1c1810; line-height:1.8; font-style:normal; }
+.poetry-section { margin-bottom:2.5rem; text-align:center; }
+.poetry-toggle { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.4rem 0; font-weight:500; }
+.poetry-toggle:hover { color:#b8975a; border-color:#b8975a; }
+.poetry-block { display:none; margin-top:1.8rem; padding:2.5rem; background:#1c1810; color:#f5f0e8; position:relative; text-align:left; }
+.poetry-block.open { display:block; }
+
+/* Animation */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation: fadeUp 0.6s ease forwards; }
+.hidden { opacity:0; pointer-events:none; }
+
+/* Reveal button */
+.reveal-btn {
+  display:block;
+  width:100%;
+  background:none;
+  border:none;
+  border-top:1px solid #e0d8c8;
+  padding:1.2rem 0;
+  font-family:sans-serif;
+  font-size:0.62rem;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:#9a5c20;
+  cursor:pointer;
+  text-align:center;
+  margin:0.5rem 0;
+  transition: color 0.2s;
+}
+.reveal-btn:hover { color:#6a3c10; }
+.poem-text { font-size:1.18rem; font-style:italic; line-height:2.2; color:#f5f0e8; margin-bottom:1.3rem; white-space:pre-line; }
+.poem-attr { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#c8a860; margin-bottom:0.3rem; font-weight:500; }
+.poem-src { font-style:italic; font-size:0.92rem; color:rgba(245,240,232,0.6); }
+.poetry-close { position:absolute; top:1rem; right:1.2rem; font-family:sans-serif; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,240,232,0.4); background:none; border:none; cursor:pointer; }
+.poetry-close:hover { color:#b8975a; }
+.btn-back { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.3rem 0; display:inline-block; font-weight:500; }
+.btn-back:hover { color:#b8975a; border-color:#b8975a; }
+@media(max-width:600px){
+  header { padding:1.2rem 1.2rem 1rem; }
+  main { padding:1.8rem 1.1rem 4rem; }
+  .art-grid { grid-template-columns:1fr; }
+  .art-card img { height:260px; }
+  .art-ph { height:300px; }
+  .poetry-block { padding:1.8rem 1.2rem; }
+  .phil-block { padding:1.1rem 1.2rem; }
+  .bridge { padding:0.8rem 1.2rem; }
+  .expansion { padding:1rem 1.2rem; }
+  textarea { font-size:1rem; padding:1rem 1.2rem; }
+  .prompt { font-size:1.25rem; }
+  .resonance-line1, .resonance-line2 { font-size:1rem; }
+  .btn-reflect { width:100%; text-align:center; padding:1rem; }
+}
+
+/* Entry preview — small whisper at top of response */
+.entry-preview { margin-bottom:1.5rem; }
+.entry-preview-text { font-size:0.88rem; font-style:normal; color:#9a8e7e; line-height:1.7; }
+.entry-preview-more { background:none; border:none; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#b8975a; cursor:pointer; padding:0; margin-left:0.3rem; }
+
+.key-gate { position:fixed; top:0; left:0; width:100%; height:100%; background:#ffffff; z-index:9999; display:flex; align-items:center; justify-content:center; font-family:'Lora',Georgia,serif; }
+.key-gate-inner { max-width:480px; width:90%; text-align:center; padding:2rem; }
+.key-gate-title { font-family:sans-serif; font-size:1.5rem; letter-spacing:0.22em; font-weight:300; color:#1c1810; margin-bottom:0.5rem; }
+.key-gate-sub { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a5c20; margin-bottom:2.5rem; }
+.key-gate-input { width:100%; font-family:'Lora',Georgia,serif; font-size:1rem; padding:0.9rem 1rem; border:1px solid #9a5c20; background:#ffffff; color:#1c1810; outline:none; margin-bottom:0.8rem; box-sizing:border-box; text-align:center; }
+.key-gate-input::placeholder { color:#c8b888; }
+.key-gate-btn { width:100%; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2rem; cursor:pointer; }
+.key-gate-btn:hover { background:#9a5c20; }
+.key-gate-error { font-size:0.85rem; color:#9a5c20; margin-top:0.6rem; display:none; }
+</style>
+</head>
+<body style="background:#ffffff">
+<header>
+  <div class="logo">LIMEN</div>
+  <div class="tagline">Go deeper.</div>
+</header>
+<div id="key-gate" class="key-gate">
+  <div class="key-gate-inner">
+    <div class="key-gate-title">LIMEN</div>
+    <div class="key-gate-sub">Go deeper.</div>
+    <input type="password" id="key-input" class="key-gate-input" placeholder="Enter your access code" />
+    <button class="key-gate-btn" onclick="submitKey()">Enter →</button>
+    <div class="key-gate-error" id="key-error">Please enter your access code to continue.</div>
+  </div>
+</div>
+
+<div id="key-gate" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#ffffff; z-index:9999; flex-direction:column; align-items:center; justify-content:center; font-family:'Lora',Georgia,serif;">
+  <div style="max-width:400px; width:90%; text-align:center; padding:2rem;">
+    <div style="font-family:sans-serif; font-size:1.4rem; letter-spacing:0.25em; font-weight:300; color:#1c1810; margin-bottom:0.5rem;">LIMEN</div>
+    <div style="font-family:sans-serif; font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a5c20; margin-bottom:2.5rem;">your life rhymes with the full breadth of human thought</div>
+    <p style="font-size:0.95rem; color:#5a4e3e; margin-bottom:1.5rem; line-height:1.7;">Enter your access code to begin.</p>
+    <input id="key-input" type="password" placeholder="Access code" style="width:100%; padding:0.8rem 1rem; font-family:'Lora',Georgia,serif; font-size:0.95rem; border:1px solid #9a5c20; background:#ffffff; color:#1c1810; margin-bottom:0.5rem; box-sizing:border-box; outline:none;">
+    <div id="key-error" style="display:none; font-size:0.82rem; color:#9a5c20; margin-bottom:0.8rem; font-family:sans-serif;">Please enter an access code to continue.</div>
+    <button onclick="submitKey()" style="width:100%; padding:0.9rem; font-family:sans-serif; font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; cursor:pointer;">Enter →</button>
+  </div>
+</div>
+
+<main id="main">
+  <!-- API key configured in script below -->
+
+
+  <div id="input-section">
+    <div class="date-line" id="date-line"></div>
+    <div class="prompt">Write anything.</div>
+    <textarea id="journal-input" placeholder="A journal entry, a thought, a feeling you can't name, a conversation that stayed with you, something you noticed — anything at all..."></textarea>
+    <div class="error" id="error-msg" style="display:none"></div>
+    <button class="btn-reflect" onclick="reflect()">Reflect →</button>
+    <div class="examples-section">
+      <div class="section-label">Or try one of these</div>
+      <div id="examples-list"></div>
+    </div>
+  </div>
+
+  <div id="loading">
+    <div class="loading-text" id="loading-text">Going deeper into what you've shared…</div>
+    <div class="dots">✦ ✦ ✦</div>
+  </div>
+
+  <div id="response">
+    <div class="resonance-line1" id="resonance-line1"></div>
+    <div class="resonance-line2" id="resonance-line2"></div>
+    <div id="concept-block" class="concept-block" style="display:none">
+      <div class="concept-name" id="concept-name"></div>
+      <div class="concept-gloss" id="concept-gloss"></div>
+    </div>
+    <div class="phil-block" id="primary-block">
+      <div class="tradition" id="primary-tradition"></div>
+      <div class="phil-text" id="primary-who"></div>
+      <div class="phil-quote" id="primary-quote"></div>
+    </div>
+    <button class="reveal-btn" id="reveal-btn" onclick="revealSecondTradition()" style="display:none;">See how another tradition meets this &rarr;</button>
+    <div class="bridge" id="bridge-block" style="display:none;">
+      <div class="bridge-label" id="relationship-label"></div>
+      <div class="bridge-text" id="mirror-relationship"></div>
+    </div>
+    <div class="phil-block mirror" id="mirror-block" style="display:none;">
+      <div class="tradition mt" id="mirror-tradition"></div>
+      <div class="phil-text" id="mirror-who"></div>
+      <div class="phil-quote" id="mirror-quote"></div>
+    </div>
+    <div class="expansion" id="expansion-block" style="display:none">
+      <div class="expansion-label">And further —</div>
+      <div class="expansion-text" id="expansion-text"></div>
+    </div>
+    <div id="lower-section" style="display:none;">
+    <div class="divider"><div class="divider-line"></div><div class="divider-star"><svg width="10" height="10" viewBox="0 0 10 10" style="display:inline-block;vertical-align:middle;"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#9a5c20"/></svg></div><div class="divider-line"></div></div>
+    <div class="section-label">Two works that resonate</div>
+    <div class="art-grid" id="art-grid"></div>
+    <div class="entry-preview" id="entry-preview" style="margin-bottom:1.5rem;padding-top:1rem;border-top:1px solid #e0d8c8;">
+      <span class="entry-preview-text" id="entry-preview-text"></span><button class="entry-preview-more" id="entry-preview-toggle" onclick="toggleEntry()"></button>
+    </div>
+    <div class="poetry-section">
+      <button class="poetry-toggle" onclick="togglePoetry()">✦ &nbsp; A poem that found its way here &nbsp; ✦</button>
+      <div class="poetry-block" id="poetry-block">
+        <button class="poetry-close" onclick="togglePoetry()">close ✕</button>
+        <div class="poem-text" id="poem-text"></div>
+        <div class="poem-attr" id="poem-attr"></div>
+        <div class="poem-src" id="poem-src"></div>
+      </div>
+    </div>
+    <button class="btn-back" onclick="goBack()">← Begin a new entry</button>
+  </div>
+</main>
+
+<script>
+// Route all images through Cloudflare Worker proxy
+const PROXY = 'https://limen-images.laksea.workers.dev/?url=';
+
+// ── 80+ CURATED WORKS — AIC artwork IDs, images fetched at startup ──
+const AIC_WORKS = [
+  // JAPANESE
+  { key:'greatWave',       id:24645,  title:'Under the Wave off Kanagawa',         artist:'Katsushika Hokusai, 1831',          tradition:'Japanese Ukiyo-e' },
+  { key:'hiroshigeRain',   id:25865,  title:'Sudden Shower over Shin-Ōhashi',      artist:'Utagawa Hiroshige, 1857',           tradition:'Japanese Ukiyo-e' },
+  { key:'hiroshigePlum',   id:25819,  title:'Plum Park in Kameido',                artist:'Utagawa Hiroshige, 1857',           tradition:'Japanese Ukiyo-e' },
+  { key:'japanesePines',   id:14591,  title:'Pine Trees in Snow',                  artist:'Maruyama Ōkyo, c.1780',            tradition:'Japanese Edo Period' },
+  // CHINESE
+  { key:'chineseLandscape',id:44013,  title:'Landscape',                           artist:'Shitao, c.1700',                    tradition:'Chinese Ink Painting' },
+  // WEST AFRICAN
+  { key:'bauleFigure',     id:239464, title:'Female Figure',                       artist:'Baule people, Côte d\'Ivoire',     tradition:'West African' },
+  { key:'beninHead',       id:137125, title:'Head of an Oba',                      artist:'Benin Kingdom, Nigeria, 16th c.',  tradition:'West African Bronze' },
+  { key:'yorubaMask',      id:142395, title:'Helmet Mask (Sowei)',                 artist:'Sande society, Sierra Leone',      tradition:'West African' },
+  // CENTRAL AFRICAN
+  { key:'nkisiFigure',     id:94983,  title:'Power Figure (Nkisi)',                artist:'Kongo people, Congo',               tradition:'Central African' },
+  // ANCIENT EGYPTIAN
+  { key:'egyptMask',       id:313,    title:'Mummy Mask',                          artist:'Ancient Egyptian, 250–150 BCE',    tradition:'Ancient Egyptian' },
+  // ANCIENT GREEK
+  { key:'greekVase',       id:4800,   title:'Athenian Red-Figure Kylix',           artist:'Ancient Greek, c.480 BCE',         tradition:'Ancient Greek' },
+  // ISLAMIC / PERSIAN
+  { key:'islamicBowl',     id:229335, title:'Bowl with Calligraphic Decoration',   artist:'Iranian, 12th century',             tradition:'Islamic' },
+  { key:'iznikDish',       id:57496,  title:'Dish with Floral Motifs',             artist:'Ottoman, Iznik, c.1575',            tradition:'Islamic Ottoman' },
+  // INDIAN / SOUTH ASIAN
+  { key:'indianTextile',   id:109330, title:'Ceremonial Textile (Patolu)',         artist:'Indian, Gujarat, 18th century',    tradition:'Indian' },
+  { key:'mughalPortrait',  id:64884,  title:'Portrait of a Prince',                artist:'Indian, Mughal, 17th century',     tradition:'Indian Mughal' },
+  { key:'buddhistThangka', id:58855,  title:'Mandala of Chakrasamvara',            artist:'Tibetan, 19th century',             tradition:'Tibetan Buddhist' },
+  // PRE-COLUMBIAN / INDIGENOUS AMERICAS
+  { key:'aztecVessel',     id:65290,  title:'Vessel of Quetzalcóatl',              artist:'Aztec, 15th–16th century',         tradition:'Mesoamerican' },
+  { key:'peruTextile',     id:623,    title:'Four-Cornered Hat',                   artist:'Wari culture, Peru, c.600–1000',   tradition:'Andean' },
+  { key:'navajoTextile',   id:156468, title:'Navajo Blanket',                      artist:'Navajo people, c.1880',             tradition:'Indigenous North American' },
+  // MEDIEVAL EUROPEAN
+  { key:'medievalMS',      id:109438, title:'Leaf from a Book of Hours',           artist:'Flemish, c.1510',                   tradition:'Medieval European' },
+  // NORTHERN EUROPEAN
+  { key:'babel',           id:52975,  title:'The Tower of Babel',                  artist:'Pieter Bruegel the Elder, 1563',   tradition:'Flemish Renaissance' },
+  { key:'durer',           id:34153,  title:'Rhinoceros',                          artist:'Albrecht Dürer, 1515',             tradition:'German Renaissance' },
+  // ROMANTIC / REALIST
+  { key:'gleaners',        id:86385,  title:'The Gleaners',                        artist:'Jean-François Millet, 1857',       tradition:'French Realism' },
+  { key:'turnerStorm',     id:69475,  title:'Valley of Aosta: Snowstorm',          artist:'J.M.W. Turner, 1836–37',          tradition:'English Romanticism' },
+  { key:'corot',           id:25794,  title:'Interrupted Reading',                 artist:'Jean-Baptiste-Camille Corot, 1870',tradition:'French Realism' },
+  { key:'delacroix',       id:16122,  title:'Combat of the Giaour and Hassan',     artist:'Eugène Delacroix, 1826',           tradition:'French Romanticism' },
+  // SYMBOLIST
+  { key:'redonCyclops',    id:57819,  title:'The Cyclops',                         artist:'Odilon Redon, c.1914',             tradition:'French Symbolism' },
+  { key:'redonFlowers',    id:64818,  title:'Vase of Flowers',                     artist:'Odilon Redon, c.1910',             tradition:'French Symbolism' },
+  { key:'redonEyes',       id:49714,  title:'Closed Eyes',                         artist:'Odilon Redon, 1890',               tradition:'French Symbolism' },
+  { key:'klimtPortrait',   id:14966,  title:'Portrait of Sonja Knips',              artist:'Gustav Klimt, 1898',               tradition:'Vienna Secession' },
+  // IMPRESSIONIST / POST-IMPRESSIONIST
+  { key:'seurat',          id:27992,  title:'A Sunday on La Grande Jatte',         artist:'Georges Seurat, 1886',             tradition:'French Post-Impressionism' },
+  { key:'monetHaystacks',  id:26778,  title:'Stacks of Wheat',                     artist:'Claude Monet, 1890',               tradition:'French Impressionism' },
+  { key:'vanGoghBedroom',  id:28560,  title:'The Bedroom',                         artist:'Vincent van Gogh, 1889',           tradition:'Post-Impressionism' },
+  { key:'gauguinAre',      id:58736,  title:'Why Are You Angry?',                  artist:'Paul Gauguin, 1896',               tradition:'Post-Impressionism' },
+  { key:'cezanneBathers',  id:16327,  title:'The Large Bathers',                   artist:'Paul Cézanne, 1906',              tradition:'Post-Impressionism' },
+  { key:'toulouse',        id:2189,   title:'At the Moulin Rouge',                 artist:'Henri de Toulouse-Lautrec, 1892',  tradition:'French Post-Impressionism' },
+  // EARLY MODERN
+  { key:'picassoOld',      id:28067,  title:'The Old Guitarist',                   artist:'Pablo Picasso, 1903–04',          tradition:'European Modernism' },
+  { key:'matisseBathers',  id:36867,  title:'Bathers by a River',                  artist:'Henri Matisse, 1916',              tradition:'European Modernism' },
+  { key:'kandinsky',       id:146702, title:'Composition',                         artist:'Wassily Kandinsky, 1913',          tradition:'European Abstraction' },
+  { key:'klee',            id:99766,  title:'Angel Applicant',                     artist:'Paul Klee, 1939',                  tradition:'European Modernism' },
+  { key:'chagall',         id:59426,  title:'The Praying Jew',                     artist:'Marc Chagall, 1923',               tradition:'European Modernism' },
+  // AMERICAN MODERN
+  { key:'nighthawks',      id:111628, title:'Nighthawks',                          artist:'Edward Hopper, 1942',              tradition:'American Realism' },
+  { key:'americanGothic',  id:6565,   title:'American Gothic',                     artist:'Grant Wood, 1930',                 tradition:'American Regionalism' },
+  { key:'okeeffe',         id:100858, title:'Sky Above Clouds IV',                 artist:'Georgia O\'Keeffe, 1965',          tradition:'American Modernism' },
+  { key:'homer',           id:16776,  title:'The Blue Boat',                       artist:'Winslow Homer, 1892',              tradition:'American Realism' },
+  { key:'catlett',         id:142581, title:'Sharecropper',                        artist:'Elizabeth Catlett, 1952',          tradition:'African American' },
+  // LATIN AMERICAN
+  { key:'siqueirosMother', id:50891,  title:'The Sob',                             artist:'David Alfaro Siqueiros, 1939',     tradition:'Mexican Muralism' },
+  // ABSTRACT EXPRESSIONIST
+  { key:'rothko',          id:82410,  title:'Untitled (Painting)',                  artist:'Mark Rothko, 1953-54',             tradition:'Abstract Expressionism' },
+  { key:'pollock',         id:108963, title:'Greyed Rainbow',                      artist:'Jackson Pollock, 1953',            tradition:'Abstract Expressionism' },
+  // PHOTOGRAPHY
+  { key:'stieglitz',       id:97910,  title:'The Steerage',                        artist:'Alfred Stieglitz, 1907',           tradition:'American Photography' },
+  { key:'evansStore',      id:100471, title:'Storefront',                          artist:'Walker Evans, 1936',               tradition:'Documentary Photography' },
+  // SCIENTIFIC ILLUSTRATION
+  { key:'haeckel',         id:44118,  title:'Kunstformen der Natur',               artist:'Ernst Haeckel, 1904',              tradition:'Scientific Illustration' },
+  { key:'audubon',         id:20509,  title:'Great Blue Heron',                    artist:'John James Audubon, 1827',         tradition:'Natural History Illustration' },
+  // EUROPEAN OLD MASTERS
+  { key:'elGreco',         id:46289,  title:'Assumption of the Virgin',            artist:'El Greco, 1577–79',               tradition:'Spanish Renaissance' },
+  { key:'goya',            id:30069,  title:'Witches\' Sabbath',                  artist:'Francisco Goya, 1823',             tradition:'Spanish Romanticism' },
+  { key:'velazquez',       id:55708,  title:'The Servant',                         artist:'Diego Velázquez, c.1618',         tradition:'Spanish Baroque' },
+];
+
+const ART = {};
+const WIKI_FALLBACKS = {
+
+  'japanesePines': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/600px-Okyo_pines.jpg',
+  'vanGoghBedroom': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg/600px-Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg',
+  'greatWave': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/600px-Tsunami_by_hokusai_19th_century.jpg',
+  'gleaners': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/600px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg',
+  'babel': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg/600px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg',
+  'lascaux': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'redonEyes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg',
+  'redonCyclops': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg',
+  'redonFlowers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/600px-Odilon_Redon_-_Vase_of_Flowers.jpg',
+  'dancingDervish': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/446892/preview',
+  'persianGarden': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/451403/preview',
+};
+
+const ART_LOAD_PROMISE = (async () => {
+  // Get AIC metadata (titles, artists, traditions) — this works fine
+  const batch1 = AIC_WORKS.slice(0, 50).map(w => w.id).join(',');
+  const batch2 = AIC_WORKS.slice(50).map(w => w.id).join(',');
+  const aicMeta = {};
+  for (const ids of [batch1, batch2]) {
+    if (!ids) continue;
+    try {
+      const res = await fetch(`https://api.artic.edu/api/v1/artworks?ids=${ids}&fields=id,title,artist_display&limit=50`);
+      const data = await res.json();
+      (data.data || []).forEach(item => { aicMeta[item.id] = item; });
+    } catch(e) {}
+  }
+
+  // For each work, find image via Met Museum API (allows Cloudflare requests)
+  async function getMetImage(searchQuery) {
+    try {
+      const searchRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=${encodeURIComponent(searchQuery)}`);
+      const searchData = await searchRes.json();
+      if (!searchData.objectIDs?.length) return null;
+      // Try more results to find a painting/artwork not a portrait photo
+      const excludeTypes = ['photograph', 'gelatin silver print', 'albumen print', 'daguerreotype', 'chromogenic print'];
+      for (let i = 0; i < Math.min(8, searchData.objectIDs.length); i++) {
+        const objRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${searchData.objectIDs[i]}`);
+        const obj = await objRes.json();
+        if (!obj.primaryImageSmall || !obj.isPublicDomain) continue;
+        const medium = (obj.medium || '').toLowerCase();
+        const objType = (obj.objectName || '').toLowerCase();
+        const isPhoto = excludeTypes.some(t => medium.includes(t) || objType.includes(t));
+        if (!isPhoto) return `${PROXY}${encodeURIComponent(obj.primaryImageSmall)}`;
+      }
+      return null;
+    } catch(e) { return null; }
+  }
+
+  // Also try Wikimedia as fallback
+  async function getWikiImage(searchQuery) {
+    try {
+      const searchRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&srnamespace=6&srlimit=5&format=json&origin=*`);
+      const searchData = await searchRes.json();
+      const results = searchData?.query?.search;
+      if (!results?.length) return null;
+      for (const result of results.slice(0, 3)) {
+        const infoRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(result.title)}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=600&format=json&origin=*`);
+        const infoData = await infoRes.json();
+        const page = Object.values(infoData?.query?.pages || {})[0];
+        const imgUrl = page?.imageinfo?.[0]?.thumburl;
+        if (imgUrl) return `${PROXY}${encodeURIComponent(imgUrl)}`;
+      }
+      return null;
+    } catch(e) { return null; }
+  }
+
+  // Load images in staggered batches to avoid rate limiting
+  const batchSize = 8;
+  for (let i = 0; i < AIC_WORKS.length; i += batchSize) {
+    const batch = AIC_WORKS.slice(i, i + batchSize);
+    await Promise.all(batch.map(async w => {
+      const searchQuery = `${w.artist.split(',')[0]} ${w.title.split('(')[0].trim()}`;
+      let imgUrl = await getMetImage(searchQuery) || await getWikiImage(searchQuery);
+      ART[w.key] = {
+        url: imgUrl || null,
+        title: w.title,
+        artist: w.artist,
+        tradition: w.tradition
+      };
+    }));
+    if (i + batchSize < AIC_WORKS.length) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+
+  const loaded = Object.values(ART).filter(a => a.url).length;
+  console.log(`ART library loaded: ${loaded} of ${AIC_WORKS.length} works with images`);
+})();
+
+const ART_KEYS = AIC_WORKS.map(w => `${w.key} (${w.title} · ${w.tradition})`).join(', ');
+
+const RELATIONSHIP_LABELS = {
+  convergence:'Two traditions, one territory',
+  deepening:'Taking it further',
+  expansion:'An additional dimension',
+  'feminist resonance':'What was seen but not named',
+};
+
+const EXAMPLES = [
+  "I've got so much to do but I've just been watching movies instead.",
+  "I've been trying to write something for months. Every time I sit down the words feel borrowed, like they belong to someone else.",
+  "I've lived in this city for ten years and I still feel like a visitor. I don't know if that's the city or me.",
+  "I went outside early this morning before anyone was awake. The quality of the light was different.",
+  "I had a conversation with a friend where we were both saying the right things and neither of us was really there.",
+  "My body knew something was wrong before I did. I kept ignoring it and then one day it just stopped."
+];
+
+const LOADING_TEXTS = ['Going deeper into what you\'ve shared','Listening across traditions','Finding what rhymes with your life','Gathering thought from many worlds','Following the thought wherever it leads'];
+
+document.getElementById('date-line').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+const exList = document.getElementById('examples-list');
+EXAMPLES.forEach(ex=>{
+  const btn=document.createElement('button'); btn.className='example-btn';
+  btn.textContent='"'+ex.slice(0,88)+'…"';
+  btn.onclick=()=>{document.getElementById('journal-input').value=ex;};
+  exList.appendChild(btn);
+});
+
+// ─── API KEY ───────────────────────────────────────────────────────
+// API key stored in session only — never in the file
+let apiKey = sessionStorage.getItem('limen_key') || '';
+
+function submitKey() {
+  const input = document.getElementById('key-input').value.trim();
+  if (!input) {
+    document.getElementById('key-error').style.display = 'block';
+    return;
+  }
+  apiKey = input;
+  sessionStorage.setItem('limen_key', apiKey);
+  document.getElementById('key-gate').style.display = 'none';
+}
+
+document.getElementById('key-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitKey();
+});
+
+if (apiKey) {
+  document.getElementById('key-gate').style.display = 'none';
+}
+// ──────────────────────────────────────────────────────────────────
+let loadingInterval;
+
+
+
+function buildPrompt(entry){
+  return `You are the philosophical heart of Limen, a journaling app. Your role is not to analyze or interpret. It is to meet.
+
+Journal entry: "${entry}"
+
+YOUR CORE TASK:
+Read this entry for the full quality of experience it carries — not just its surface statement but all layers simultaneously: sensory, temporal, affective, relational, ecological. Think of Daniel Stern's "present moment" — vitality contours, feeling tones, temporal shapes, spatial textures all at once. Find where in the full breadth of human thought — any tradition, any culture, any century — those same layers have been named, lived, or understood with precision. The match is a recognition: the reader arrives at a thinker or concept and feels something already present in their experience has now been seen. The tradition does not interpret the entry. It meets it.
+
+TWO-THINKER LOGIC — this is the philosophical heart of every response:
+PRIMARY THINKER: Opens with a handhold — a voice the person might have some cultural thread to, even if they've never studied it. Something that feels like it belongs to the breadth of human thought they might recognise. Usually from the first-position list below.
+SECOND THINKER: Arrives from genuinely elsewhere — adds what the first tradition couldn't reach. A different angle on the same truth, or a truth the first missed entirely. Together they are more true than either alone.
+Example: Merleau-Ponty names the flesh / Irigaray shows what philosophy forgot about the elemental body
+Example: Bergson names duration / Dōgen shows that even emptiness is time doing something
+Example: Heidegger names dwelling / Watsuji shows that climate is not backdrop but the very medium of being
+Example: Spinoza names conatus / Lorde names what happens when that drive is systematically suppressed
+
+POSITION GUIDELINES — which tradition opens, which deepens:
+
+FIRST POSITION (opens most naturally — familiar handhold):
+The great tradition: Heraclitus, Anaximander, Empedocles, Parmenides, Plato, Aristotle, Epicurus, Marcus Aurelius, Plotinus
+Medieval: Hildegard of Bingen, Meister Eckhart, Julian of Norwich, Ibn Arabi, Rumi, Duns Scotus
+Early modern: Spinoza, Hume, Kant, Vico, Leibniz
+19th century: Hegel, Kierkegaard, Nietzsche, Schopenhauer, William James, Thoreau, Emerson
+20th century Continental: Husserl, Heidegger, Merleau-Ponty, Sartre, de Beauvoir, Levinas, Arendt, Wittgenstein, Benjamin, Bakhtin, Bachelard, Bergson, Derrida, Foucault, Ricoeur
+Contemporary: Han Byung-Chul (achievement society, burnout, transparency), Simone Weil (attention, gravity and grace, affliction), Goffman, Bourdieu, Taylor
+
+BOTH FIRST AND SECOND (depending on genuine fit):
+Deleuze/Guattari — can open when the entry is genuinely about flux, becoming, multiplicity. If they open, pair with something grounding as second. Never open with them for mystical or ecological entries.
+Massumi — same logic as Deleuze/Guattari
+
+STRONG SECOND POSITION (deepens what the first missed):
+Feminist philosophy: Irigaray (elemental materialism — water, air, earth, fire as philosophical categories, not metaphors), de Beauvoir, Braidotti, Genevieve Lloyd, Cavarero, Kelly Oliver
+Affect theory: Kathleen Stewart, Ahmed, Teresa Brennan, Grosz, Barad
+Ecological philosophy: Plumwood, Haraway, Tsing, Abram, Toadvine, Viveiros de Castro
+
+NATURAL SECOND POSITION (expansion from elsewhere):
+Japanese philosophy: Watsuji (always: Kyoto School ethicist), Nishida (pure experience, basho), Yuasa (body-schema, the dark body), Zhuangzi, Dōgen — arrive as the thing Western thought missed about body, climate, place, time
+Buddhist thought: ALWAYS second, NEVER opens alone. Arrives as genuine expansion. Use precise terms — never wellness language.
+  Nagarjuna (śūnyatā), Dōgen (being-time), Thich Nhat Hanh (interbeing), Vasubandhu, Machig Labdrön, Chandrakirti
+  Theravada: anicca, anattā, paṭicca-samuppāda — presented as philosophy not spirituality
+Indian philosophy: Upanishads, Patanjali, Abhinavagupta, Kashmir Shaivism, Krishnamurti — second position
+Islamic philosophy: Ibn Arabi, Al-Ghazali, Averroes, Avicenna — second position
+
+OCCASIONAL FIRST (when entry directly calls for it — relation, land, listening, ecological grief, community):
+Indigenous philosophy — serious philosophers, not cultural representatives:
+  Winona LaDuke (Anishinaabe — land as relation, not resource)
+  Richard Atleo/Umeek (Nuu-chah-nulth — everything is one, tsawalk)
+  Dr. Enrique Salmón (Rarámuri — kincentric ecology, the world as kin)
+  Lee Maracle (Stó:lō — story as philosophy, the land speaks)
+  Robin Wall Kimmerer (Potawatomi — grammar of animacy, reciprocity)
+  Vine Deloria Jr. (Lakota — place-based knowledge, critique of Western science)
+  Glen Coulthard, Leanne Betasamosake Simpson, Kim TallBear
+  Ungunmerr-Baumann (dadirri — deep listening as epistemology)
+  Ubuntu philosophy, Buen Vivir
+
+TURN/REVELATION SECOND (names what the first tradition couldn't see):
+Black feminist/diasporic: Lorde, Wynter, hooks, Moten, Mbembe, Glissant, Fanon, Gilroy, Spillers, Hartman
+LAST RESORT ONLY: Berlant
+
+CRITICAL PROTECTION AGAINST NEW-AGE FLATTENING:
+Buddhist, Indigenous, and Eastern thought must arrive with the same philosophical rigor as Western thought. Use the actual term in its actual language. Name the actual thinker. State the actual philosophical claim. "Anicca" is not "everything changes." "Śūnyatā" is not emptiness of meaning. Dadirri is not "mindfulness." Precision is what protects these traditions.
+
+CONCEPT AND THINKER MUST MATCH EXACTLY:
+Haecceity → Deleuze/Guattari | Conatus → Spinoza | Fūdo → Watsuji | Duration → Bergson | Heteroglossia → Bakhtin | Dadirri → Ungunmerr-Baumann | Emplacement → Howes | Dwelling → Ingold | Śūnyatā → Nagarjuna | Anicca → Theravada/Pali | Interbeing → Thich Nhat Hanh | Opacity → Glissant | Affect → Massumi | Sympoiesis → Haraway | Tsawalk → Atleo | Kincentric ecology → Salmón
+
+CONCEPT NAME must be identical in opening and concept_name field.
+
+TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken not written. A curious 17-year-old follows it without losing the depth. Never: "invites us to", "reminds us", "journey", "growth", "healing", "transform", "explore", "navigate", "sit with", "hold space", "unpack", "argued", "arguing", "spent decades", "spent their life", "devoted their career". Never soften a philosophical claim into advice or comfort.
+
+OPENING — always two moves, two separate sentences:
+Read the entry on all registers simultaneously — sensory, temporal, affective, relational — before deciding how to open. Then ask: is what rhymes here a word, or a whole way of inhabiting, understanding, and reflecting on the world? Lead with a concept only when the concept itself is the most precise meeting point — when the word names something the entry is carrying that no thinker's name alone could name as exactly. If the thinker's entire orientation is the meeting point — their sensibility, their territory, the texture of their thought — lead with the thinker. Let the entry decide.
+MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct.
+MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS AFTER THE THINKER'S NAME. No elaboration whatsoever. e.g. "Bergson called this duration." "Han called this Müdigkeit." The concept block does all the explaining — this line is only the name.
+MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing — nothing after it.
+
+PHILOSOPHER DESCRIPTIONS — exactly 2 sentences, short:
+Sentence 1: [Name] was a [tradition word], [one fact — what they refused, showed, or built their work around]. One clause only. No elaboration.
+Sentence 2: What this entry shares with their work. Direct. No "What this entry carries is precisely..." — just state it.
+Examples:
+"Bergson was a vitalist who insisted clock time is a fiction — a grid thrown over something alive."
+"Merleau-Ponty was a phenomenologist who refused to separate mind from the body that carries it."
+"Han Byung-Chul is a philosopher who diagnosed the exhaustion of societies that replace command with seduction — achievement becomes self-violence."
+"Goffman was a social theorist who showed selfhood is not interior first but performed before audiences we rarely chose."
+"Watsuji was a Kyoto School ethicist who refused to separate human existence from climate, season, and the surrounding world."
+"Nagarjuna was a Madhyamaka philosopher who showed that nothing — not the self, not the moment — has inherent existence."
+
+CONCEPT GLOSS — one compressed clause, under 20 words. Precise dictionary style. No interpretation.
+"Duration — Bergson's term for lived time as continuous qualitative flow, not measurable instants."
+"Śūnyatā — Nagarjuna's term for the absence of inherent existence in all phenomena, including the self."
+"Dadirri — Ungunmerr-Baumann's term for deep listening as a way of knowing, prior to speech."
+
+BRIDGE (mirror_relationship) — one sentence only. 25 words maximum. Names both thinkers. Sharp. What becomes visible holding them together.
+
+AND FURTHER — EXACTLY 2 sentences. Both thinkers named. Short. Spoken. Level of the idea only. Does not address the person.
+
+ARTWORKS — choose two from this curated library. Strong preference: one from the Western tradition and one from outside it — Islamic, East Asian, South Asian, African, Indigenous, pre-Columbian, Byzantine, Persian, Japanese. Only choose two Western works if both are genuinely the most precise match and no other tradition speaks as directly to this entry. Match quality of experience, not subject matter.
+${ART_KEYS}
+
+JSON only, no markdown:
+{
+  "resonance": "Two sentences. Sentence 1: direct sensory observation of what the entry carries. Sentence 2: '[Thinker] called this [concept].' OR 'There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name].' Together under 40 words.",
+  "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
+  "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
+  "primary_tradition": "Thinker · Tradition",
+  "primary_who": "EXACTLY 2 sentences — no more. Sentence 1: '[Name] was a [tradition word], [one fact]'. Sentence 2: one short clause on what this entry shares with their work. If you write a third sentence, delete it.",
+  "primary_quote": "Real verified quote, under 35 words",
+  "relationship_type": "convergence/deepening/expansion/feminist resonance",
+  "mirror_tradition": "Thinker · Tradition",
+  "mirror_who": "EXACTLY 2 sentences — no more. Same structure as primary_who. If you write a third sentence, delete it.",
+  "mirror_quote": "Real verified quote, under 30 words",
+  "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
+  "expansion": "EXACTLY 2 sentences — no more, no less. Both thinkers named. Short. Spoken. If you write a third sentence, delete it.",
+  "artwork1_key": "key from library",
+  "artwork1_why": "One sentence — quality of experience this work shares with the entry",
+  "artwork2_key": "Different key, different tradition",
+  "artwork2_why": "One sentence — quality of experience this work shares with the entry",
+  "poem_text": "3-5 lines — real verified poem. Draw from the full breadth: Sanskrit (Mirabai, Kabir, Kalidasa), Chinese (Du Fu, Li Bai, Wang Wei), Japanese (Basho, Issa, Saigyo, Izumi Shikibu), Arabic (Al-Mutanabbi, Mahmoud Darwish), Persian beyond Rumi (Hafiz, Forugh Farrokhzad, Omar Khayyam), French (Apollinaire, Rene Char, Yves Bonnefoy), Indigenous (Joy Harjo, Louise Erdrich), African (Leopold Sedar Senghor, Warsan Shire), Latin American (Neruda, Lorca), Western canonical (Rilke, Keats, Hopkins, Dickinson, Whitman, Celan). Do not default to Rumi — reach for the poet whose specific voice and tradition rhymes most precisely with this entry.",
+  "poem_attribution": "Poet · tradition",
+  "poem_source": "Title and date"
+}`;
+}
+function revealSecondTradition(){
+  const btn = document.getElementById('reveal-btn');
+  if (btn) { btn.style.opacity = '0'; setTimeout(() => btn.style.display = 'none', 300); }
+
+  function fadeShow(id, delay) {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = 'block';
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.7s ease';
+      setTimeout(() => { el.style.opacity = '1'; }, 50);
+    }, delay);
+  }
+
+  fadeShow('bridge-block', 300);
+  fadeShow('mirror-block', 1800);
+
+  // expansion after mirror
+  setTimeout(() => {
+    const exp = document.getElementById('expansion-block');
+    if (exp && exp.getAttribute('data-has-content') === '1') {
+      exp.style.display = 'block';
+      exp.style.opacity = '0';
+      exp.style.transition = 'opacity 0.7s ease';
+      setTimeout(() => { exp.style.opacity = '1'; }, 50);
+    }
+  }, 3300);
+
+  // lower section (art, poem) after expansion
+  setTimeout(() => {
+    const lower = document.getElementById('lower-section');
+    if (lower) {
+      lower.style.display = 'block';
+      lower.style.opacity = '0';
+      lower.style.transition = 'opacity 0.7s ease';
+      setTimeout(() => { lower.style.opacity = '1'; }, 50);
+    }
+  }, 4500);
+}
+
+async function reflect(){
+  const text=document.getElementById('journal-input').value.trim();
+  if(text.length<20){showError('Write a little more before reflecting.');return;}
+  hideError();
+  document.getElementById('input-section').style.display='none';
+  document.getElementById('response').style.display='none';
+  document.getElementById('loading').style.display='block';
+  let tick=0;
+  loadingInterval=setInterval(()=>{tick++;document.getElementById('loading-text').textContent=LOADING_TEXTS[tick%LOADING_TEXTS.length]+'…';},2000);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:buildPrompt(text)}]})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error?.message||'API error '+res.status);
+    const raw=data.content[0].text;
+    const s=raw.indexOf('{'),e=raw.lastIndexOf('}');
+    if(s===-1) throw new Error('No JSON in response');
+    const d=JSON.parse(raw.slice(s,e+1));
+    if(!d.resonance) throw new Error('Invalid response format');
+    clearInterval(loadingInterval);
+    renderResponse(text,d);
+  }catch(err){
+    clearInterval(loadingInterval);
+    document.getElementById('loading').style.display='none';
+    document.getElementById('input-section').style.display='block';
+    showError('Error: '+err.message);
+  }
+}
+
+async function renderResponse(entry,d){
+  document.getElementById('loading').style.display='none';
+  // Entry preview
+  const shortEntry = entry.length > 120 ? entry.slice(0, 120) + '…' : entry;
+  const previewEl = document.getElementById('entry-preview-text');
+  previewEl.textContent = shortEntry;
+  previewEl.setAttribute('data-short', shortEntry);
+  previewEl.setAttribute('data-full', entry);
+  const toggleBtn = document.getElementById('entry-preview-toggle');
+  if (entry.length > 120) { toggleBtn.textContent = ' ↓ more'; } else { toggleBtn.textContent = ''; }
+  // Split resonance into two lines — first sentence, then the rhyme/word line
+  const res = d.resonance || '';
+  const splitIdx = res.search(/\.\s+There is|There is/);
+  if (splitIdx > 0) {
+    document.getElementById('resonance-line1').textContent = res.slice(0, splitIdx).trim().replace(/\.$/, '') + '.';
+    document.getElementById('resonance-line2').textContent = res.slice(splitIdx).trim();
+  } else {
+    const dotIdx = res.indexOf('. ');
+    if (dotIdx > 0) {
+      document.getElementById('resonance-line1').textContent = res.slice(0, dotIdx + 1).trim();
+      document.getElementById('resonance-line2').textContent = res.slice(dotIdx + 2).trim();
+    } else {
+      document.getElementById('resonance-line1').textContent = res;
+      document.getElementById('resonance-line2').textContent = '';
+    }
+  }
+
+  if(d.concept_name?.trim()){
+    document.getElementById('concept-block').style.display='block';
+    document.getElementById('concept-name').textContent=d.concept_name;
+    document.getElementById('concept-gloss').textContent=d.concept_gloss;
+    document.getElementById('primary-block').style.borderTop='1px solid #e0d8c8';
+  }else{
+    document.getElementById('concept-block').style.display='none';
+    document.getElementById('primary-block').style.borderTop='none';
+  }
+
+  document.getElementById('primary-tradition').textContent=d.primary_tradition;
+  document.getElementById('primary-who').textContent=d.primary_who;
+  document.getElementById('primary-quote').textContent=d.primary_quote;
+  document.getElementById('relationship-label').textContent=RELATIONSHIP_LABELS[d.relationship_type]||d.relationship_type;
+  document.getElementById('mirror-relationship').textContent=d.mirror_relationship;
+  document.getElementById('mirror-tradition').textContent=d.mirror_tradition;
+  document.getElementById('mirror-who').textContent=d.mirror_who;
+  document.getElementById('mirror-quote').textContent=d.mirror_quote;
+
+  if(d.expansion?.trim()){document.getElementById('expansion-text').textContent=d.expansion; document.getElementById('expansion-block').style.display='none'; document.getElementById('expansion-block').setAttribute('data-has-content','1');}
+  else{document.getElementById('expansion-block').style.display='none'; document.getElementById('expansion-block').setAttribute('data-has-content','0');}
+
+  const grid=document.getElementById('art-grid');
+  grid.innerHTML='';
+
+  function renderArtCard(card, art, why) {
+    const img = document.createElement('img');
+    img.style.cssText = '';
+    img.alt = art.title;
+    img.onerror = function() {
+      this.style.display = 'none';
+      const ph = document.createElement('div');
+      ph.className = 'art-ph';
+      ph.innerHTML = `<div class="art-ph-t">${art.title}</div><div class="art-ph-s">${art.tradition}</div>`;
+      card.insertBefore(ph, card.firstChild);
+    };
+    img.src = art.url;
+    const meta = document.createElement('div');
+    meta.className = 'art-meta';
+    meta.innerHTML = `<div class="art-title">${art.title}</div><div class="art-artist">${art.artist} · ${art.tradition}</div><div class="art-why">${why}</div>`;
+    card.appendChild(img);
+    card.appendChild(meta);
+  }
+
+  function renderArtPlaceholder(card, title, tradition, why) {
+    const ph = document.createElement('div');
+    ph.className = 'art-ph';
+    ph.innerHTML = `<div class="art-ph-t">${title}</div><div class="art-ph-s">${tradition}</div>`;
+    const meta = document.createElement('div');
+    meta.className = 'art-meta';
+    meta.innerHTML = `<div class="art-title">${title}</div><div class="art-artist">${tradition}</div><div class="art-why">${why}</div>`;
+    card.appendChild(ph);
+    card.appendChild(meta);
+  }
+
+  // Wait for ART library to load before rendering images
+  await ART_LOAD_PROMISE;
+  console.log('Rendering art — ART keys available:', Object.keys(ART).slice(0,5).join(', '));
+  console.log('AI chose:', d.artwork1_key, d.artwork2_key);
+
+  const artKeys = Object.keys(ART);
+  const card1 = document.createElement('div'); card1.className = 'art-card';
+  const card2 = document.createElement('div'); card2.className = 'art-card';
+  grid.appendChild(card1);
+  grid.appendChild(card2);
+
+  [
+    { key: d.artwork1_key, why: d.artwork1_why, card: card1, fallbackIdx: 0 },
+    { key: d.artwork2_key, why: d.artwork2_why, card: card2, fallbackIdx: 3 },
+  ].forEach(({ key, why, card, fallbackIdx }) => {
+    const art = ART[key] || ART[artKeys[fallbackIdx % artKeys.length]];
+    if (art) {
+      renderArtCard(card, art, why);
+    } else {
+      renderArtPlaceholder(card, key || 'Artwork', '', why);
+    }
+  });
+
+  document.getElementById('poem-text').textContent=d.poem_text;
+  document.getElementById('poem-attr').textContent=d.poem_attribution;
+  document.getElementById('poem-src').textContent=d.poem_source;
+  document.getElementById('poetry-block').classList.remove('open');
+  document.getElementById('response').style.display='block';
+
+  // Sequential fade-in — slow and deliberate
+  const conceptExists = !!(d.concept_name?.trim());
+  const STEP = 2000; // 2 seconds between each element
+
+  function fadeIn(id, delay) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.style.display === 'none' && id !== 'concept-block') return;
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.8s ease';
+    setTimeout(() => { el.style.opacity = '1'; }, delay);
+  }
+
+  let d2 = 0;
+  fadeIn('resonance-line1', d2); d2 += STEP;
+  fadeIn('resonance-line2', d2); d2 += STEP;
+  if (conceptExists) { fadeIn('concept-block', d2); d2 += STEP; }
+  fadeIn('primary-block', d2); d2 += STEP;
+
+  // Show reveal button
+  setTimeout(() => {
+    const btn = document.getElementById('reveal-btn');
+    if (btn) {
+      btn.style.display = 'block';
+      btn.style.opacity = '0';
+      btn.style.transition = 'opacity 0.8s ease';
+      setTimeout(() => { btn.style.opacity = '1'; }, 100);
+    }
+  }, d2 + 300);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleEntry(){
+  const el = document.getElementById('entry-preview-text');
+  const btn = document.getElementById('entry-preview-toggle');
+  const full = el.getAttribute('data-full');
+  const short = el.getAttribute('data-short');
+  if (el.textContent === short) {
+    el.textContent = full;
+    btn.textContent = ' ↑';
+  } else {
+    el.textContent = short;
+    btn.textContent = ' ↓ more';
+  }
+}
+function togglePoetry(){document.getElementById('poetry-block').classList.toggle('open');}
+
+// Force divider star color — override any cached CSS
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.divider-star').forEach(el => {
+    el.style.setProperty('color', '#9a5c20', 'important');
+  });
+});
+
+function goBack(){
+  document.getElementById('response').style.display='none';
+  document.getElementById('input-section').style.display='block';
+  document.getElementById('journal-input').value='';
+  document.getElementById('poetry-block').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showError(msg){const el=document.getElementById('error-msg');el.textContent=msg;el.style.display='block';}
+function hideError(){document.getElementById('error-msg').style.display='none';}
+</script>
+</body>
+</html>
