@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260331183801 -->
+<!DOCTYPE html><!-- v20260331184809 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -532,7 +532,7 @@ Medieval: Hildegard of Bingen, Meister Eckhart, Julian of Norwich, Ibn Arabi, Ru
 Early modern: Spinoza, Hume, Kant, Vico, Leibniz
 19th century: Hegel, Kierkegaard, Nietzsche, Schopenhauer, William James, Thoreau, Emerson
 20th century Continental: Husserl, Heidegger, Merleau-Ponty, Sartre, de Beauvoir, Levinas, Arendt, Wittgenstein, Benjamin, Bakhtin, Bachelard, Bergson, Derrida, Foucault, Ricoeur
-Contemporary: Han Byung-Chul (achievement society, burnout, transparency), Simone Weil (attention, gravity and grace, affliction), Charles Taylor — Goffman and Bourdieu are sociologists of mechanism, not philosophers of existence: use only as last resort when nothing else fits more precisely
+Contemporary: Han Byung-Chul (achievement society, burnout, transparency), Simone Weil (attention, gravity and grace, affliction), Charles Taylor. GOFFMAN AND BOURDIEU: Do not use. They are sociologists of social mechanism, not philosophers of existence. Levinas, Bakhtin, Merleau-Ponty, Heidegger all go deeper into relational and conversational territory than Goffman ever could.
 
 BOTH FIRST AND SECOND (depending on genuine fit):
 Deleuze/Guattari — can open when the entry is genuinely about flux, becoming, multiplicity. If they open, pair with something grounding as second. Never open with them for mystical or ecological entries.
@@ -580,8 +580,8 @@ TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken 
 OPENING — always two moves, two separate sentences:
 Read the entry on all registers simultaneously — sensory, temporal, affective, relational — before deciding how to open. Then ask: is what rhymes here a word, or a whole way of inhabiting, understanding, and reflecting on the world? Lead with a concept only when the concept itself is the most precise meeting point — when the word names something the entry is carrying that no thinker's name alone could name as exactly. If the thinker's entire orientation is the meeting point — their sensibility, their territory, the texture of their thought — lead with the thinker. Let the entry decide.
 MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct.
-MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS AFTER THE THINKER'S NAME. No elaboration whatsoever. e.g. "Bergson called this duration." "Han called this Müdigkeit." The concept block does all the explaining — this line is only the name.
-MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing — nothing after it.
+MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS AFTER THE THINKER'S NAME. No elaboration. No corrections. No qualifications. e.g. "Bergson called this duration." "Levinas called this the face." ONE thinker only — never name two thinkers in Move 2.
+MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing. Nothing after it. Never: "but there is another" or "but X cuts closer" — pick ONE and commit.
 
 PHILOSOPHER DESCRIPTIONS — exactly 2 sentences, short:
 Sentence 1: [Name] was a [tradition word], [one fact — what they refused, showed, or built their work around]. One clause only. No elaboration.
@@ -704,6 +704,18 @@ async function reflect(){
 
 async function renderResponse(entry,d){
   document.getElementById('loading').style.display='none';
+  // Reset all sequenced elements to hidden state
+  ['bridge-block','mirror-block','expansion-block','lower-section'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display='none'; el.style.opacity=''; }
+  });
+  const revBtn = document.getElementById('reveal-btn');
+  if (revBtn) { revBtn.style.display='none'; revBtn.style.opacity=''; }
+  // Hide first section elements — will fade in sequentially
+  ['resonance-line1','resonance-line2','concept-block','primary-block'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity='0'; el.style.transition='none'; }
+  });
   // Entry preview
   const shortEntry = entry.length > 120 ? entry.slice(0, 120) + '…' : entry;
   const previewEl = document.getElementById('entry-preview-text');
