@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260330151014 -->
+<!DOCTYPE html><!-- v20260331183801 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -327,19 +327,53 @@ const AIC_WORKS = [
 ];
 
 const ART = {};
-const WIKI_FALLBACKS = {
+// AIC IIIF direct image URLs — bypasses all API calls
+// Format: https://www.artic.edu/iiif/2/{image_id}/full/600,/0/default.jpg
+const AIC_IMAGE_IDS = {
+  'greatWave':      '25c31d8d-21a4-9ea1-1d73-6a2eca4dda7e',
+  'hiroshigeRain':  'fb60f679-40b5-8936-10e7-54ef71bcde87',
+  'hiroshigePlum':  '9cd18027-af25-a82a-cdde-d1e469b37041',
+  'seurat':         '1adf2696-8489-499b-cad2-821d7fde4b33',
+  'monetHaystacks': '1e0b7b73-7a67-81a0-b312-2b9736e47d10',
+  'vanGoghBedroom': '25c31d8d-21a4-9ea1-1d73-6a2eca4dda7e',
+  'nighthawks':     'a9f88f26-5dd9-d2de-8e41-5d4f0e0e2e6d',
+  'americanGothic': 'a9f88f26-5dd9-d2de-8e41-5d4f0e0e2e6d',
+  'rothko':         '82410-main',
+  'pollock':        '108963-main',
+};
 
-  'japanesePines': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/600px-Okyo_pines.jpg',
+// Comprehensive Wikimedia fallbacks for known works
+const WIKI_FALLBACKS = {
+  'greatWave':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/600px-Tsunami_by_hokusai_19th_century.jpg',
+  'hiroshigeRain':  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hiroshige_Ohashi_Atake_no_Yudachi.jpg/600px-Hiroshige_Ohashi_Atake_no_Yudachi.jpg',
+  'hiroshigePlum':  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Hiroshige_Kameido_Ume_Yashiki.jpg/600px-Hiroshige_Kameido_Ume_Yashiki.jpg',
+  'japanesePines':  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/600px-Okyo_pines.jpg',
+  'gleaners':       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/600px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg',
+  'babel':          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg/600px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg',
+  'lascaux':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
+  'redonEyes':      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg',
+  'redonCyclops':   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg',
+  'redonFlowers':   'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/600px-Odilon_Redon_-_Vase_of_Flowers.jpg',
   'vanGoghBedroom': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg/600px-Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg',
-  'greatWave': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/600px-Tsunami_by_hokusai_19th_century.jpg',
-  'gleaners': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/600px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg',
-  'babel': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg/600px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg',
-  'lascaux': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
-  'redonEyes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg',
-  'redonCyclops': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg',
-  'redonFlowers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/600px-Odilon_Redon_-_Vase_of_Flowers.jpg',
+  'seurat':         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg',
+  'monetHaystacks': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg/600px-Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg',
+  'nighthawks':     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Nighthawks_by_Edward_Hopper_1942.jpg/600px-Nighthawks_by_Edward_Hopper_1942.jpg',
+  'americanGothic': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Grant_DeVolson_Wood_-_American_Gothic.jpg/600px-Grant_DeVolson_Wood_-_American_Gothic.jpg',
+  'durer':          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Duerer_Rhinoceros.jpg/600px-Duerer_Rhinoceros.jpg',
+  'elGreco':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/El_Greco_-_The_Assumption_of_the_Virgin_-_Google_Art_Project.jpg/600px-El_Greco_-_The_Assumption_of_the_Virgin_-_Google_Art_Project.jpg',
+  'goya':           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg/600px-Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg',
+  'toulouse':       'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg/600px-Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg',
+  'corot':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg/600px-Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg',
   'dancingDervish': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/446892/preview',
-  'persianGarden': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/451403/preview',
+  'persianGarden':  'https://collectionapi.metmuseum.org/api/collection/v1/iiif/451403/preview',
+  'haeckel':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Haeckel_Radiolaria.jpg/600px-Haeckel_Radiolaria.jpg',
+  'audubon':        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Audubon_Great_Blue_Heron.jpg/600px-Audubon_Great_Blue_Heron.jpg',
+  'stieglitz':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg/600px-Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg',
+  'gauguinAre':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Paul_Gauguin_-_Nave_Nave_Mahana.jpg/600px-Paul_Gauguin_-_Nave_Nave_Mahana.jpg',
+  'kandinsky':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg/600px-Vassily_Kandinsky%2C_1913_-_Composition_7.jpg',
+  'chagall':        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg/600px-Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg',
+  'velazquez':      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg/600px-Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg',
+  'delacroix':      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/600px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg',
 };
 
 const ART_LOAD_PROMISE = (async () => {
@@ -590,7 +624,7 @@ JSON only, no markdown:
   "artwork1_why": "One sentence — quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
   "artwork2_why": "One sentence — quality of experience this work shares with the entry",
-  "poem_text": "3-5 lines — real verified poem. Draw from the full breadth: Sanskrit (Mirabai, Kabir, Kalidasa), Chinese (Du Fu, Li Bai, Wang Wei), Japanese (Basho, Issa, Saigyo, Izumi Shikibu), Arabic (Al-Mutanabbi, Mahmoud Darwish), Persian beyond Rumi (Hafiz, Forugh Farrokhzad, Omar Khayyam), French (Apollinaire, Rene Char, Yves Bonnefoy), Indigenous (Joy Harjo, Louise Erdrich), African (Leopold Sedar Senghor, Warsan Shire), Latin American (Neruda, Lorca), Western canonical (Rilke, Keats, Hopkins, Dickinson, Whitman, Celan). Do not default to Rumi — reach for the poet whose specific voice and tradition rhymes most precisely with this entry.",
+  "poem_text": "3-5 lines — real verified poem. DECISION RULE: Before choosing any poem, ask — is there a Japanese, Chinese, Sanskrit, Arabic, Persian, Tibetan, Indigenous, African, or Latin American poem that meets this entry with equal or greater precision? If yes — use that one. Only use American or British poets if no other tradition speaks as directly. NEVER default to Whitman, Frost, or Mary Oliver. FOR SENSORY/NATURE/IMPERMANENCE: Basho or Issa almost always. FOR LONGING: Hafiz. FOR GRIEF AND THE ORDINARY: Du Fu. FOR DEVOTION: Mirabai or Kabir. FOR BODY/EARTH: Joy Harjo or Senghor. FOR LANGUAGE/WRITING: Mahmoud Darwish. FOR CONTEMPORARY ALIENATION: Forugh Farrokhzad or Warsan Shire. Western canonical (Rilke, Celan, Dickinson) only when genuinely most precise.",
   "poem_attribution": "Poet · tradition",
   "poem_source": "Title and date"
 }`;
