@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260331184809 -->
+<!DOCTYPE html><!-- v20260331185340 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -580,8 +580,9 @@ TONE: Warm, direct, learned. Not therapeutic. Not new-age. Not academic. Spoken 
 OPENING — always two moves, two separate sentences:
 Read the entry on all registers simultaneously — sensory, temporal, affective, relational — before deciding how to open. Then ask: is what rhymes here a word, or a whole way of inhabiting, understanding, and reflecting on the world? Lead with a concept only when the concept itself is the most precise meeting point — when the word names something the entry is carrying that no thinker's name alone could name as exactly. If the thinker's entire orientation is the meeting point — their sensibility, their territory, the texture of their thought — lead with the thinker. Let the entry decide.
 MOVE 1: One simple direct observation. Sensory or temporal. Not a metaphor. Not inside the person's head. Short. Plain. Direct.
-MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS AFTER THE THINKER'S NAME. No elaboration. No corrections. No qualifications. e.g. "Bergson called this duration." "Levinas called this the face." ONE thinker only — never name two thinkers in Move 2.
-MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the landing. Nothing after it. Never: "but there is another" or "but X cuts closer" — pick ONE and commit.
+MOVE 2 (concept-led): "[Thinker] called this [concept]." MAXIMUM 6 WORDS. No elaboration. e.g. "Bergson called this duration." "Levinas called this the face." "Nagarjuna called this śūnyatā."
+MOVE 2 (thinker-led): "There is a [philosopher/monk/poet/anthropologist] whose work rhymes with this. [Name]." The name is the final word. Nothing after it.
+CRITICAL: Choose ONE thinker before writing anything. Commit fully. Never start a sentence then change course. Never write "— wait" or "— but" or correct yourself mid-line.
 
 PHILOSOPHER DESCRIPTIONS — exactly 2 sentences, short:
 Sentence 1: [Name] was a [tradition word], [one fact — what they refused, showed, or built their work around]. One clause only. No elaboration.
@@ -619,7 +620,7 @@ JSON only, no markdown:
   "mirror_who": "EXACTLY 2 sentences — no more, no exceptions. Same strict structure as primary_who.",
   "mirror_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only.",
   "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
-  "expansion": "EXACTLY 2 sentences. Both thinkers named. Stays entirely at the level of the ideas — never addresses the person, never says 'you' or 'your', never interprets what the entry means for the person. Opens a door, does not walk through it on their behalf.",
+  "expansion": "EXACTLY 2 sentences — short, spoken, plain. Both thinkers named by name. Maximum 20 words per sentence. Level of the idea only. Never 'you' or 'your'. Never more than 2 sentences — if you write a third, delete it and shorten the first two instead.",
   "artwork1_key": "key from library",
   "artwork1_why": "One sentence — quality of experience this work shares with the entry",
   "artwork2_key": "Different key, different tradition",
@@ -729,7 +730,7 @@ async function renderResponse(entry,d){
   const splitIdx = res.search(/\.\s+There is|There is/);
   if (splitIdx > 0) {
     document.getElementById('resonance-line1').textContent = res.slice(0, splitIdx).trim().replace(/\.$/, '') + '.';
-    document.getElementById('resonance-line2').textContent = res.slice(splitIdx).trim();
+    document.getElementById('resonance-line2').textContent = res.slice(splitIdx).trim().replace(/^\.\s*/, '');
   } else {
     const dotIdx = res.indexOf('. ');
     if (dotIdx > 0) {
