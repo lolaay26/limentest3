@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260401170238 -->
+<!DOCTYPE html><!-- v20260401173040 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -257,8 +257,8 @@ textarea:focus { border-color:#b8975a; }
 </head>
 <body style="background:#ffffff">
 <header>
-  <div class="logo">LIMN</div>
-  <div class="tagline">Go deeper.</div>
+  <div class="logo" onclick="document.getElementById('about-overlay').classList.add('open')" style="cursor:pointer;">LIMN</div>
+  <div class="tagline">somewhere in everything humanity has thought about being alive, your moment rhymes</div>
 </header>
 <div id="key-gate" class="key-gate">
   <div class="key-gate-inner">
@@ -1047,6 +1047,89 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function shareCard(){
+  const line1 = document.getElementById('resonance-line1').textContent;
+  const line2 = document.getElementById('resonance-line2').textContent;
+  const concept = document.getElementById('concept-name').textContent;
+  const gloss = document.getElementById('concept-gloss').textContent;
+  const primaryTrad = document.getElementById('primary-tradition').textContent;
+  const primaryWho = document.getElementById('primary-who').textContent;
+  const bridge = document.getElementById('mirror-relationship').textContent;
+  const mirrorTrad = document.getElementById('mirror-tradition').textContent;
+  const mirrorWho = document.getElementById('mirror-who').textContent;
+  const poem = document.getElementById('poem-text').textContent;
+  const poemAttr = document.getElementById('poem-attr').textContent;
+
+  const firstSentence = (text) => {
+    const match = text.match(/^[^.!?]+[.!?]/);
+    return match ? match[0] : text;
+  };
+
+  // Organic burst SVG — like a dried flower, not tech
+  const burst = `<svg width="32" height="32" viewBox="0 0 32 32" style="display:block;margin:0 auto;">
+    <line x1="16" y1="16" x2="16" y2="3" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="26" y2="6" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="29" y2="16" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="26" y2="26" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="16" y2="29" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="6" y2="26" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="3" y2="16" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="6" y2="6" stroke="#2a1005" stroke-width="0.8" opacity="0.3"/>
+    <line x1="16" y1="16" x2="21" y2="4" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <line x1="16" y1="16" x2="28" y2="21" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <line x1="16" y1="16" x2="21" y2="28" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <line x1="16" y1="16" x2="4" y2="21" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <line x1="16" y1="16" x2="4" y2="11" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <line x1="16" y1="16" x2="11" y2="4" stroke="#2a1005" stroke-width="0.6" opacity="0.2"/>
+    <circle cx="16" cy="3" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="26" cy="6" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="29" cy="16" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="26" cy="26" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="16" cy="29" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="6" cy="26" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="3" cy="16" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="6" cy="6" r="1.2" fill="#2a1005" opacity="0.25"/>
+    <circle cx="16" cy="16" r="2" fill="#2a1005" opacity="0.15"/>
+  </svg>`;
+
+  const cardHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#e8950a; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; font-family:'Lora',Georgia,serif; }
+.card { background:#f0a830; border-radius:24px; padding:2.8rem 2.4rem; max-width:460px; width:100%; }
+.line1 { font-size:0.95rem; color:#2a1005; line-height:1.75; margin-bottom:0.4rem; }
+.line2 { font-size:0.95rem; font-weight:500; color:#ffeed0; line-height:1.75; margin-bottom:1.8rem; }
+.concept-name { font-family:sans-serif; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:#2a1005; font-weight:700; margin-bottom:0.3rem; }
+.concept-gloss { font-size:0.85rem; color:#ffeed0; line-height:1.7; margin-bottom:1.5rem; }
+.trad { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.18em; text-transform:uppercase; color:#2a1005; font-weight:700; margin-bottom:0.3rem; }
+.phil { font-size:0.86rem; color:#2a1005; line-height:1.75; margin-bottom:1.3rem; }
+.bridge { font-size:0.88rem; color:#ffeed0; line-height:1.75; border-left:2px solid #ffeed0; padding-left:0.9rem; margin-bottom:1.3rem; opacity:0.92; }
+.divider { text-align:center; margin:1rem 0; }
+.poem { font-size:0.88rem; font-style:italic; color:#2a1005; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
+.poem-attr { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:#2a1005; opacity:0.5; text-transform:uppercase; }
+.limn { font-family:sans-serif; font-size:0.5rem; letter-spacing:0.3em; text-transform:uppercase; color:#ffeed0; opacity:0.6; margin-top:1.8rem; text-align:right; }
+</style></head><body><div class="card">
+<div class="line1">${line1}</div>
+<div class="line2">${line2}</div>
+${concept ? `<div class="concept-name">${concept}</div><div class="concept-gloss">${gloss}</div>` : ''}
+<div class="trad">${primaryTrad}</div>
+<div class="phil">${firstSentence(primaryWho)}</div>
+<div class="divider">${burst}</div>
+<div class="bridge">${bridge}</div>
+<div class="trad">${mirrorTrad}</div>
+<div class="phil">${firstSentence(mirrorWho)}</div>
+<div class="divider">${burst}</div>
+<div class="poem">${poem}</div>
+<div class="poem-attr">${poemAttr}</div>
+<div class="limn">LIMN</div>
+</div></body></html>`;
+
+  const blob = new Blob([cardHtml], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
+function shareCard_old_disabled(){
   const line1 = document.getElementById('resonance-line1').textContent;
   const line2 = document.getElementById('resonance-line2').textContent;
   const concept = document.getElementById('concept-name').textContent;
