@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260401193020 -->
+<!DOCTYPE html><!-- v20260401200207 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -18,7 +18,7 @@
   --sub-space: 0.18em;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#ffffff; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.05rem; color:#1c1810; min-height:100vh; }
+body { background:#ffffff; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.05rem; color:#2d4260; min-height:100vh; }
 header { padding:1.8rem 2.5rem 1.4rem; border-bottom:1px solid #e0d8c8; display:flex; align-items:baseline; gap:1.2rem; }
 .logo { font-size:1.7rem; letter-spacing:0.22em; font-weight:300; }
 .tagline { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.28em; text-transform:uppercase; color:#b8975a; font-style:italic; }
@@ -26,13 +26,13 @@ main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f
 .key-section { background:#ffffff; border:1px solid #e0d8c8; padding:1.2rem 1.5rem; margin-bottom:2rem; }
 .key-label { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.25em; text-transform:uppercase; color:#9a8e7e; margin-bottom:0.5rem; display:block; }
 .key-row { display:flex; gap:0.6rem; }
-.key-input { flex:1; font-family:monospace; font-size:0.8rem; padding:0.6rem 0.8rem; border:1px solid #e0d8c8; background:#f5f0e8; color:#1c1810; outline:none; }
+.key-input { flex:1; font-family:monospace; font-size:0.8rem; padding:0.6rem 0.8rem; border:1px solid #e0d8c8; background:#f5f0e8; color:#2d4260; outline:none; }
 .key-input:focus { border-color:#b8975a; }
 .key-btn { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.6rem 1rem; cursor:pointer; white-space:nowrap; }
 .key-status { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:#4a7a5a; margin-top:0.4rem; }
 .date-line { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#9a8e7e; margin-bottom:0.6rem; }
 .prompt { font-size:0.97rem; font-style:normal; font-weight:400; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
-textarea { width:100%; min-height:180px; background:#faf5ee; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
+textarea { width:100%; min-height:180px; background:#faf5ee; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#2d4260; resize:vertical; outline:none; display:block; }
 textarea:focus { border-color:#b8975a; }
 .about-overlay {
   display:none;
@@ -45,17 +45,16 @@ textarea:focus { border-color:#b8975a; }
 }
 .about-overlay.open { display:flex; }
 .about-box {
-  background:#ffffff;
+  background:#243850;
   padding:3rem 3.5rem;
   max-width:480px;
   width:90%;
   text-align:center;
-  border:1px solid #e0d8c8;
 }
 .about-line1 {
   font-family:'Lora',Georgia,serif;
   font-size:1.05rem;
-  color:#1c1810;
+  color:#2d4260;
   line-height:1.75;
   margin-bottom:0.6rem;
 }
@@ -63,7 +62,7 @@ textarea:focus { border-color:#b8975a; }
   font-family:'Lora',Georgia,serif;
   font-size:1.05rem;
   font-weight:500;
-  color:#9a5c20;
+  color:#c8782a;
   line-height:1.75;
   margin-bottom:2rem;
 }
@@ -72,12 +71,12 @@ textarea:focus { border-color:#b8975a; }
   font-size:0.58rem;
   letter-spacing:0.2em;
   text-transform:uppercase;
-  color:#9a8e7e;
+  color:#8aa0b8;
   background:none;
   border:none;
   cursor:pointer;
 }
-.about-close:hover { color:#1c1810; }
+.about-close:hover { color:#2d4260; }
 .header-title { cursor:pointer; }
 .header-title:hover { opacity:0.75; }
 .btn-reflect { margin-top:1rem; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2.2rem; cursor:pointer; }
@@ -92,7 +91,7 @@ textarea:focus { border-color:#b8975a; }
 .dots { color:#b8975a; letter-spacing:0.8em; font-size:1.2rem; }
 #response { display:none; }
 /* Opening — two lines, warm dark gold, inviting */
-.resonance-line1 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:0.97rem; font-style:normal; font-weight:400; line-height:1.5; color:#1c1810; margin-bottom:0.4rem; text-align:left; }
+.resonance-line1 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:0.97rem; font-style:normal; font-weight:400; line-height:1.5; color:#2d4260; margin-bottom:0.4rem; text-align:left; }
 .resonance-line2 { font-family:'Lora',Georgia,'Times New Roman',serif; font-size:0.97rem; font-style:normal; font-weight:500; line-height:1.5; color:#9a5c20; margin-bottom:1.8rem; text-align:left; }
 /* Concept block */
 .concept-block { background:#ffffff; border:1px solid #ddd3c0; border-left:3px solid #b8975a; margin-bottom:0; padding:1rem 1.5rem; }
@@ -102,14 +101,14 @@ textarea:focus { border-color:#b8975a; }
 .phil-block.mirror { border-left-color:#9a5c20; border-top:none; }
 .tradition { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
 .tradition.mt { color:var(--sub); }
-.phil-text { font-size:0.95rem; line-height:1.85; color:#1c1810; margin-bottom:0.8rem; }
-.phil-quote { font-size:0.97rem; font-style:italic; color:#1c1810; border-left:2px solid #9a5c20; padding-left:1rem; line-height:1.75; margin-bottom:0.8rem; }
+.phil-text { font-size:0.95rem; line-height:1.85; color:#2d4260; margin-bottom:0.8rem; }
+.phil-quote { font-size:0.97rem; font-style:italic; color:#2d4260; border-left:2px solid #9a5c20; padding-left:1rem; line-height:1.75; margin-bottom:0.8rem; }
 .bridge { background:#efd4a8; border:1px solid #9a5c20; padding:1rem 1.7rem; }
 .bridge-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
-.bridge-text { font-size:0.95rem; line-height:1.8; color:#1c1810; font-style:normal; }
+.bridge-text { font-size:0.95rem; line-height:1.8; color:#2d4260; font-style:normal; }
 .expansion { padding:1.2rem 1.4rem; margin-bottom:2rem; border-top:1px solid #e0d8c8; border-bottom:1px solid #e0d8c8; }
 .expansion-label { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.6rem; font-weight:500; }
-.expansion-text { font-size:0.95rem; font-style:normal; color:#1c1810; line-height:1.85; }
+.expansion-text { font-size:0.95rem; font-style:normal; color:#2d4260; line-height:1.85; }
 .divider { display:flex; align-items:center; gap:1rem; margin:1.6rem 0; }
 .divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.5; }
 .divider-star { color:#9a5c20 !important; }
@@ -120,9 +119,9 @@ textarea:focus { border-color:#b8975a; }
 .art-ph-t { font-style:italic; font-size:0.95rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
 .art-ph-s { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); }
 .art-meta { padding:1rem 1.2rem; border-top:1px solid #e0d8c8; }
-.art-title { font-style:italic; font-size:1rem; color:#1c1810; margin-bottom:0.3rem; }
+.art-title { font-style:italic; font-size:1rem; color:#2d4260; margin-bottom:0.3rem; }
 .art-artist { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
-.art-why { font-size:0.95rem; color:#1c1810; line-height:1.8; font-style:normal; }
+.art-why { font-size:0.95rem; color:#2d4260; line-height:1.8; font-style:normal; }
 .poetry-section { margin-bottom:2.5rem; text-align:center; }
 .poetry-toggle { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.4rem 0; font-weight:500; }
 .poetry-toggle:hover { color:#b8975a; border-color:#b8975a; }
@@ -201,17 +200,16 @@ textarea:focus { border-color:#b8975a; }
 }
 .about-overlay.open { display:flex; }
 .about-box {
-  background:#ffffff;
+  background:#243850;
   padding:3rem 3.5rem;
   max-width:480px;
   width:90%;
   text-align:center;
-  border:1px solid #e0d8c8;
 }
 .about-line1 {
   font-family:'Lora',Georgia,serif;
   font-size:1.05rem;
-  color:#1c1810;
+  color:#2d4260;
   line-height:1.75;
   margin-bottom:0.6rem;
 }
@@ -219,7 +217,7 @@ textarea:focus { border-color:#b8975a; }
   font-family:'Lora',Georgia,serif;
   font-size:1.05rem;
   font-weight:500;
-  color:#9a5c20;
+  color:#c8782a;
   line-height:1.75;
   margin-bottom:2rem;
 }
@@ -228,12 +226,12 @@ textarea:focus { border-color:#b8975a; }
   font-size:0.58rem;
   letter-spacing:0.2em;
   text-transform:uppercase;
-  color:#9a8e7e;
+  color:#8aa0b8;
   background:none;
   border:none;
   cursor:pointer;
 }
-.about-close:hover { color:#1c1810; }
+.about-close:hover { color:#2d4260; }
 .header-title { cursor:pointer; }
 .header-title:hover { opacity:0.75; }
 .btn-reflect { width:100%; text-align:center; padding:1rem; }
@@ -248,7 +246,7 @@ textarea:focus { border-color:#b8975a; }
 .key-gate-inner { max-width:480px; width:90%; text-align:center; padding:2rem; }
 .key-gate-title { font-family:sans-serif; font-size:1.5rem; letter-spacing:0.22em; font-weight:300; color:#1c1810; margin-bottom:0.5rem; }
 .key-gate-sub { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a5c20; margin-bottom:2.5rem; }
-.key-gate-input { width:100%; font-family:'Lora',Georgia,serif; font-size:1rem; padding:0.9rem 1rem; border:1px solid #9a5c20; background:#ffffff; color:#1c1810; outline:none; margin-bottom:0.8rem; box-sizing:border-box; text-align:center; }
+.key-gate-input { width:100%; font-family:'Lora',Georgia,serif; font-size:1rem; padding:0.9rem 1rem; border:1px solid #9a5c20; background:#ffffff; color:#2d4260; outline:none; margin-bottom:0.8rem; box-sizing:border-box; text-align:center; }
 .key-gate-input::placeholder { color:#c8b888; }
 .key-gate-btn { width:100%; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2rem; cursor:pointer; }
 .key-gate-btn:hover { background:#9a5c20; }
@@ -326,7 +324,7 @@ textarea:focus { border-color:#b8975a; }
       <div class="expansion-text" id="expansion-text"></div>
     </div>
     <div id="lower-section" style="display:none;">
-    <div class="divider"><div class="divider-line"></div><div class="divider-star"><svg width="10" height="10" viewBox="0 0 10 10" style="display:inline-block;vertical-align:middle;"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#9a5c20"/></svg></div><div class="divider-line"></div></div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-star"><svg width="10" height="10" viewBox="0 0 10 10" style="display:inline-block;vertical-align:middle;"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#243850"/></svg></div><div class="divider-line"></div></div>
     <div class="section-label">Two works that resonate</div>
     <div class="art-grid" id="art-grid"></div>
     <div class="entry-preview" id="entry-preview" style="margin-bottom:1.5rem;padding-top:1rem;border-top:1px solid #e0d8c8;">
@@ -758,11 +756,11 @@ JSON only, no markdown:
   "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
   "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "ONE sentence only — starting with the philosopher's last name. '[Last name] [verb] [what they saw/refused/showed/insisted]'. The heading already names who they are — this sentence names what they did. e.g. 'Arendt refused to separate thinking from the question of what it means to act in a shared world.' 'Weil insisted that attention — real attention, not ambition — is the rarest form of intelligence.' NO 'was a philosopher who'. Just the name and what they did.",
+  "primary_who": "ONE sentence only — starting with the philosopher's last name. FORBIDDEN: 'was a philosopher who', 'was a teacher who', 'was a theorist who', 'was a poet who', 'was a monk who', 'was an author who'. Instead use an active verb directly: 'Arendt refused...', 'Weil insisted...', 'Zhuangzi showed...', 'Nagarjuna argued...', 'Dōgen understood...', 'Glissant traced...'. '[Last name] [verb] [what they saw/refused/showed/insisted]'. The heading already names who they are — this sentence names what they did. e.g. 'Arendt refused to separate thinking from the question of what it means to act in a shared world.' 'Weil insisted that attention — real attention, not ambition — is the rarest form of intelligence.' NO 'was a philosopher who'. Just the name and what they did.",
   "primary_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only. If the quote is longer than 20 words, find a shorter one or use just the most essential phrase.",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "ONE sentence only. Same structure as primary_who — last name first, then what they did. No 'was a philosopher who'.",
+  "mirror_who": "ONE sentence only. Same strict structure as primary_who — last name first, active verb directly. FORBIDDEN: 'was a [x] who'.",
   "mirror_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only.",
   "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
   "expansion": "EXACTLY 2 sentences — short, spoken, plain. Both thinkers named by name. Maximum 20 words per sentence. Level of the idea only. Never 'you' or 'your'. Never more than 2 sentences — if you write a third, delete it and shorten the first two instead.",
@@ -1076,13 +1074,13 @@ function shareCard(){
   win.document.write('.br { font-size:0.85rem; color:#ffeed0; line-height:1.75; border-left:2px solid #ffeed0; padding-left:0.85rem; margin-bottom:1.3rem; opacity:0.92; }');
   win.document.write('.dv { display:flex; align-items:center; gap:0.6rem; margin:0.9rem 0; }');
   win.document.write('.dl { flex:1; height:0.5px; background:#2a1005; opacity:0.2; }');
-  win.document.write('.pm { font-size:0.85rem; font-style:italic; color:#2a1005; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }');
-  win.document.write('.pa { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.14em; color:#2a1005; opacity:0.5; text-transform:uppercase; }');
-  win.document.write('.lt { font-family:sans-serif; font-size:0.48rem; letter-spacing:0.28em; text-transform:uppercase; color:#ffeed0; opacity:0.6; margin-top:1.6rem; text-align:right; }');
+  win.document.write('.pm { font-size:0.85rem; font-style:italic; color:#f0e8d8; line-height:1.9; white-space:pre-line; }');
+  win.document.write('.pa { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.14em; color:#c8782a; text-transform:uppercase; margin-top:0.4rem; }');
+  win.document.write('.lt { font-family:sans-serif; font-size:0.48rem; letter-spacing:0.28em; text-transform:uppercase; color:#243850; margin-top:1.6rem; text-align:right; font-weight:700; }');
   win.document.write('.cb { display:block; width:100%; margin-top:1rem; padding:0.7rem; background:none; border:1px solid rgba(42,16,5,0.3); color:#2a1005; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; border-radius:4px; opacity:0.6; }');
   win.document.write('</style></head><body><div class="card">');
 
-  const burst = '<svg width="18" height="18" viewBox="0 0 24 24"><line x1="12" y1="12" x2="12" y2="2" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="20" y2="4" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="22" y2="12" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="20" y2="20" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="12" y2="22" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="4" y2="20" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="2" y2="12" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/><line x1="12" y1="12" x2="4" y2="4" stroke="#2a1005" stroke-width="0.7" opacity="0.3"/></svg>';
+  const burst = '<svg width="18" height="18" viewBox="0 0 24 24"><line x1="12" y1="12" x2="12" y2="2" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="20" y2="4" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="22" y2="12" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="20" y2="20" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="12" y2="22" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="4" y2="20" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="2" y2="12" stroke="#243850" stroke-width="0.9" opacity="0.6"/><line x1="12" y1="12" x2="4" y2="4" stroke="#243850" stroke-width="0.9" opacity="0.6"/></svg>';
   const divider = '<div class="dv"><div class="dl"></div>' + burst + '<div class="dl"></div></div>';
 
   win.document.write('<div class="l1">' + line1 + '</div>');
@@ -1101,8 +1099,7 @@ function shareCard(){
   win.document.write('<div class="pq">' + mirrorQuote + '</div>');
   win.document.write('<div class="pw">' + firstSentence(mirrorWho) + '</div>');
   win.document.write(divider);
-  win.document.write('<div class="pm">' + poem + '</div>');
-  win.document.write('<div class="pa">' + poemAttr + '</div>');
+  win.document.write('<div style="background:#243850;border-radius:8px;padding:1.1rem 1.2rem;margin-bottom:0.8rem;"><div class="pm">' + poem + '</div><div class="pa">' + poemAttr + '</div></div>');
   win.document.write('<div class="lt">LIMN</div>');
   win.document.write('<div style="display:flex;gap:0.8rem;margin-top:1rem;">');
   win.document.write('<button class="cb" onclick="saveImg()">Save as image</button>');
@@ -1139,16 +1136,16 @@ function shareCard_old_disabled(){
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#ffffff; font-family:'Lora',Georgia,serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
 .card { max-width:560px; width:100%; padding:3rem; border:1px solid #e0d8c8; }
-.line1 { font-size:1rem; color:#1c1810; line-height:1.65; margin-bottom:0.4rem; }
+.line1 { font-size:1rem; color:#2d4260; line-height:1.65; margin-bottom:0.4rem; }
 .line2 { font-size:1rem; font-weight:500; color:#9a5c20; line-height:1.65; margin-bottom:1.6rem; }
 .concept-name { font-family:sans-serif; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a6a30; font-weight:700; margin-bottom:0.3rem; }
 .concept-gloss { font-size:0.88rem; color:#8a6a30; font-weight:600; line-height:1.7; margin-bottom:1.6rem; }
 .trad-label { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.18em; text-transform:uppercase; color:#8a6a30; margin-bottom:0.3rem; }
-.phil-line { font-size:0.9rem; color:#1c1810; line-height:1.7; margin-bottom:1rem; }
+.phil-line { font-size:0.9rem; color:#2d4260; line-height:1.7; margin-bottom:1rem; }
 .bridge-line { font-size:0.9rem; color:#9a5c20; line-height:1.7; margin:0.8rem 0; font-style:normal; padding:0.7rem 1rem; background:#fdf6ee; border-left:3px solid #9a5c20; }
 .divider { display:flex; align-items:center; gap:1rem; margin:1.4rem 0; }
 .divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.4; }
-.poem { font-size:0.92rem; font-style:italic; color:#1c1810; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
+.poem { font-size:0.92rem; font-style:italic; color:#2d4260; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
 .poem-attr { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#9a8e7e; text-transform:uppercase; }
 .limn-tag { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:#c8b888; margin-top:1.8rem; text-align:right; }
 </style></head><body><div class="card">
