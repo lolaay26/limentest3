@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260401160057 -->
+<!DOCTYPE html><!-- v20260401170238 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -34,6 +34,52 @@ main { max-width:700px; margin:0 auto; padding:2.5rem 1.5rem 5rem; background:#f
 .prompt { font-size:0.97rem; font-style:normal; font-weight:400; color:#4a4035; margin-bottom:1.8rem; line-height:1.5; }
 textarea { width:100%; min-height:180px; background:#faf5ee; border:1px solid #e0d8c8; padding:1.3rem 1.6rem; font-family:'Lora',Georgia,'Times New Roman',serif; font-size:1.1rem; line-height:1.9; color:#1c1810; resize:vertical; outline:none; display:block; }
 textarea:focus { border-color:#b8975a; }
+.about-overlay {
+  display:none;
+  position:fixed;
+  top:0; left:0; width:100%; height:100%;
+  background:rgba(28,24,16,0.55);
+  z-index:9998;
+  align-items:center;
+  justify-content:center;
+}
+.about-overlay.open { display:flex; }
+.about-box {
+  background:#ffffff;
+  padding:3rem 3.5rem;
+  max-width:480px;
+  width:90%;
+  text-align:center;
+  border:1px solid #e0d8c8;
+}
+.about-line1 {
+  font-family:'Lora',Georgia,serif;
+  font-size:1.05rem;
+  color:#1c1810;
+  line-height:1.75;
+  margin-bottom:0.6rem;
+}
+.about-line2 {
+  font-family:'Lora',Georgia,serif;
+  font-size:1.05rem;
+  font-weight:500;
+  color:#9a5c20;
+  line-height:1.75;
+  margin-bottom:2rem;
+}
+.about-close {
+  font-family:sans-serif;
+  font-size:0.58rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:#9a8e7e;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+.about-close:hover { color:#1c1810; }
+.header-title { cursor:pointer; }
+.header-title:hover { opacity:0.75; }
 .btn-reflect { margin-top:1rem; font-family:sans-serif; font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; background:#1c1810; color:#faf7f0; border:none; padding:0.9rem 2.2rem; cursor:pointer; }
 .btn-reflect:hover { background:#8b3a2a; }
 .error { margin-top:0.8rem; color:#8b3a2a; font-style:italic; font-size:0.9rem; padding:0.7rem 1rem; border:1px solid rgba(139,58,42,0.2); background:rgba(139,58,42,0.04); }
@@ -144,7 +190,53 @@ textarea:focus { border-color:#b8975a; }
   textarea { font-size:1rem; padding:1rem 1.2rem; }
   .prompt { font-size:0.97rem; }
   .resonance-line1, .resonance-line2 { font-size:1rem; }
-  .btn-reflect { width:100%; text-align:center; padding:1rem; }
+  .about-overlay {
+  display:none;
+  position:fixed;
+  top:0; left:0; width:100%; height:100%;
+  background:rgba(28,24,16,0.55);
+  z-index:9998;
+  align-items:center;
+  justify-content:center;
+}
+.about-overlay.open { display:flex; }
+.about-box {
+  background:#ffffff;
+  padding:3rem 3.5rem;
+  max-width:480px;
+  width:90%;
+  text-align:center;
+  border:1px solid #e0d8c8;
+}
+.about-line1 {
+  font-family:'Lora',Georgia,serif;
+  font-size:1.05rem;
+  color:#1c1810;
+  line-height:1.75;
+  margin-bottom:0.6rem;
+}
+.about-line2 {
+  font-family:'Lora',Georgia,serif;
+  font-size:1.05rem;
+  font-weight:500;
+  color:#9a5c20;
+  line-height:1.75;
+  margin-bottom:2rem;
+}
+.about-close {
+  font-family:sans-serif;
+  font-size:0.58rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:#9a8e7e;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+.about-close:hover { color:#1c1810; }
+.header-title { cursor:pointer; }
+.header-title:hover { opacity:0.75; }
+.btn-reflect { width:100%; text-align:center; padding:1rem; }
 }
 
 /* Entry preview — small whisper at top of response */
@@ -165,12 +257,12 @@ textarea:focus { border-color:#b8975a; }
 </head>
 <body style="background:#ffffff">
 <header>
-  <div class="logo">LIMEN</div>
+  <div class="logo">LIMN</div>
   <div class="tagline">Go deeper.</div>
 </header>
 <div id="key-gate" class="key-gate">
   <div class="key-gate-inner">
-    <div class="key-gate-title">LIMEN</div>
+    <div class="key-gate-title">LIMN</div>
     <div class="key-gate-sub">Go deeper.</div>
     <input type="password" id="key-input" class="key-gate-input" placeholder="Enter your access code" />
     <button class="key-gate-btn" onclick="submitKey()">Enter →</button>
@@ -180,8 +272,8 @@ textarea:focus { border-color:#b8975a; }
 
 <div id="key-gate" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#ffffff; z-index:9999; flex-direction:column; align-items:center; justify-content:center; font-family:'Lora',Georgia,serif;">
   <div style="max-width:400px; width:90%; text-align:center; padding:2rem;">
-    <div style="font-family:sans-serif; font-size:1.4rem; letter-spacing:0.25em; font-weight:300; color:#1c1810; margin-bottom:0.5rem;">LIMEN</div>
-    <div style="font-family:sans-serif; font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a5c20; margin-bottom:2.5rem;">your life rhymes with the full breadth of human thought</div>
+    <div class="header-title" style="font-family:sans-serif; font-size:1.4rem; letter-spacing:0.25em; font-weight:300; color:#1c1810; margin-bottom:0.5rem;" onclick="document.getElementById('about-overlay').classList.add('open')">LIMN</div>
+    <div style="font-family:sans-serif; font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a5c20; margin-bottom:2.5rem;">somewhere in everything humanity has thought about being alive, your moment rhymes</div>
     <p style="font-size:0.95rem; color:#5a4e3e; margin-bottom:1.5rem; line-height:1.7;">Enter your access code to begin.</p>
     <input id="key-input" type="password" placeholder="Access code" style="width:100%; padding:0.8rem 1rem; font-family:'Lora',Georgia,serif; font-size:0.95rem; border:1px solid #9a5c20; background:#ffffff; color:#1c1810; margin-bottom:0.5rem; box-sizing:border-box; outline:none;">
     <div id="key-error" style="display:none; font-size:0.82rem; color:#9a5c20; margin-bottom:0.8rem; font-family:sans-serif;">Please enter an access code to continue.</div>
@@ -189,6 +281,13 @@ textarea:focus { border-color:#b8975a; }
   </div>
 </div>
 
+<div class="about-overlay" id="about-overlay" onclick="closeAbout(event)">
+  <div class="about-box">
+    <p class="about-line1">Somewhere in everything humanity has thought about being alive, your moment rhymes.</p>
+    <p class="about-line2">Limn finds where.</p>
+    <button class="about-close" onclick="document.getElementById('about-overlay').classList.remove('open')">close</button>
+  </div>
+</div>
 <main id="main">
   <!-- API key configured in script below -->
 
@@ -222,7 +321,7 @@ textarea:focus { border-color:#b8975a; }
       <div class="phil-text" id="primary-who"></div>
       <div class="phil-quote" id="primary-quote"></div>
     </div>
-    <div class="tradition-bridge-text" id="reveal-btn">But there is more. Another tradition has always known this too.</div>
+    <div class="tradition-bridge-text" id="reveal-btn">But there is more. Another tradition rhymes with this.</div>
     <div class="bridge" id="bridge-block" style="display:none;">
       <div class="bridge-label" id="relationship-label"></div>
       <div class="bridge-text" id="mirror-relationship"></div>
@@ -504,7 +603,7 @@ const EXAMPLES = [
   "My body knew something was wrong before I did. I kept ignoring it and then one day it just stopped."
 ];
 
-const LOADING_TEXTS = ['Going deeper into what you\'ve shared','Listening across traditions','Finding what rhymes with your life','Gathering thought from many worlds','Following the thought wherever it leads'];
+const LOADING_TEXTS = ['Going deeper into what you\'ve shared','Listening across traditions','Finding where your moment rhymes','Gathering thought from many worlds','Following the thought wherever it leads'];
 
 document.getElementById('date-line').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 const exList = document.getElementById('examples-list');
@@ -517,7 +616,7 @@ EXAMPLES.forEach(ex=>{
 
 // ─── API KEY ───────────────────────────────────────────────────────
 // API key stored in session only — never in the file
-let apiKey = sessionStorage.getItem('limen_key') || '';
+let apiKey = sessionStorage.getItem('limn_key') || '';
 
 function submitKey() {
   const input = document.getElementById('key-input').value.trim();
@@ -526,7 +625,7 @@ function submitKey() {
     return;
   }
   apiKey = input;
-  sessionStorage.setItem('limen_key', apiKey);
+  sessionStorage.setItem('limn_key', apiKey);
   document.getElementById('key-gate').style.display = 'none';
 }
 
@@ -952,38 +1051,62 @@ function shareCard(){
   const line2 = document.getElementById('resonance-line2').textContent;
   const concept = document.getElementById('concept-name').textContent;
   const gloss = document.getElementById('concept-gloss').textContent;
+  const primaryTrad = document.getElementById('primary-tradition').textContent;
+  const primaryWho = document.getElementById('primary-who').textContent;
+  const bridge = document.getElementById('mirror-relationship').textContent;
+  const mirrorTrad = document.getElementById('mirror-tradition').textContent;
+  const mirrorWho = document.getElementById('mirror-who').textContent;
   const poem = document.getElementById('poem-text').textContent;
   const poemAttr = document.getElementById('poem-attr').textContent;
 
-  // Build card HTML
+  // Get first sentence of each philosopher description
+  const firstSentence = (text) => {
+    const match = text.match(/^[^.!?]+[.!?]/);
+    return match ? match[0] : text;
+  };
+
   const cardHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#ffffff; font-family:'Lora',Georgia,serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
-.card { max-width:540px; width:100%; padding:3rem; border:1px solid #e0d8c8; }
-.line1 { font-size:1.05rem; color:#1c1810; line-height:1.6; margin-bottom:0.4rem; }
-.line2 { font-size:1.05rem; font-weight:500; color:#9a5c20; line-height:1.6; margin-bottom:2rem; }
-.concept-name { font-family:sans-serif; font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a6a30; font-weight:700; margin-bottom:0.3rem; }
-.concept-gloss { font-size:0.9rem; color:#8a6a30; font-weight:600; line-height:1.7; margin-bottom:2rem; }
-.divider { display:flex; align-items:center; gap:1rem; margin:1.5rem 0; }
+.card { max-width:560px; width:100%; padding:3rem; border:1px solid #e0d8c8; }
+.line1 { font-size:1rem; color:#1c1810; line-height:1.65; margin-bottom:0.4rem; }
+.line2 { font-size:1rem; font-weight:500; color:#9a5c20; line-height:1.65; margin-bottom:1.6rem; }
+.concept-name { font-family:sans-serif; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a6a30; font-weight:700; margin-bottom:0.3rem; }
+.concept-gloss { font-size:0.88rem; color:#8a6a30; font-weight:600; line-height:1.7; margin-bottom:1.6rem; }
+.trad-label { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.18em; text-transform:uppercase; color:#8a6a30; margin-bottom:0.3rem; }
+.phil-line { font-size:0.9rem; color:#1c1810; line-height:1.7; margin-bottom:1rem; }
+.bridge-line { font-size:0.9rem; color:#9a5c20; line-height:1.7; margin:0.8rem 0; font-style:normal; padding:0.7rem 1rem; background:#fdf6ee; border-left:3px solid #9a5c20; }
+.divider { display:flex; align-items:center; gap:1rem; margin:1.4rem 0; }
 .divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.4; }
-.poem { font-size:0.95rem; font-style:italic; color:#1c1810; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
-.poem-attr { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.15em; color:#9a8e7e; text-transform:uppercase; }
-.limen-tag { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.3em; text-transform:uppercase; color:#c8b888; margin-top:2rem; text-align:right; }
+.poem { font-size:0.92rem; font-style:italic; color:#1c1810; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
+.poem-attr { font-family:sans-serif; font-size:0.58rem; letter-spacing:0.15em; color:#9a8e7e; text-transform:uppercase; }
+.limn-tag { font-family:sans-serif; font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:#c8b888; margin-top:1.8rem; text-align:right; }
 </style></head><body><div class="card">
 <div class="line1">${line1}</div>
 <div class="line2">${line2}</div>
 ${concept ? `<div class="concept-name">${concept}</div><div class="concept-gloss">${gloss}</div>` : ''}
+<div class="trad-label">${primaryTrad}</div>
+<div class="phil-line">${firstSentence(primaryWho)}</div>
+<div class="bridge-line">${bridge}</div>
+<div class="trad-label">${mirrorTrad}</div>
+<div class="phil-line">${firstSentence(mirrorWho)}</div>
 <div class="divider"><div class="divider-line"></div><svg width="8" height="8" viewBox="0 0 10 10"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#9a5c20"/></svg><div class="divider-line"></div></div>
 <div class="poem">${poem}</div>
 <div class="poem-attr">${poemAttr}</div>
-<div class="limen-tag">Limen</div>
+<div class="limn-tag">Limn</div>
 </div></body></html>`;
 
   const blob = new Blob([cardHtml], {type:'text/html'});
   const url = URL.createObjectURL(blob);
   window.open(url, '_blank');
+}
+
+function closeAbout(e){
+  if(e.target === document.getElementById('about-overlay')){
+    document.getElementById('about-overlay').classList.remove('open');
+  }
 }
 
 function goBack(){
