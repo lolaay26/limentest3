@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260401152641 -->
+<!DOCTYPE html><!-- v20260401160057 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -114,6 +114,21 @@ textarea:focus { border-color:#b8975a; }
 .poem-src { font-style:italic; font-size:0.92rem; color:rgba(245,240,232,0.6); }
 .poetry-close { position:absolute; top:1rem; right:1.2rem; font-family:sans-serif; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,240,232,0.4); background:none; border:none; cursor:pointer; }
 .poetry-close:hover { color:#b8975a; }
+.share-btn {
+  display:block;
+  background:none;
+  border:1px solid #9a5c20;
+  color:#9a5c20;
+  font-family:sans-serif;
+  font-size:0.62rem;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  padding:0.8rem 2rem;
+  cursor:pointer;
+  margin:1rem auto 0.5rem;
+  transition:background 0.2s, color 0.2s;
+}
+.share-btn:hover { background:#9a5c20; color:#fff; }
 .btn-back { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); background:none; border:none; border-bottom:1px solid #c8b888; cursor:pointer; padding:0.3rem 0; display:inline-block; font-weight:500; }
 .btn-back:hover { color:#b8975a; border-color:#b8975a; }
 @media(max-width:600px){
@@ -237,6 +252,7 @@ textarea:focus { border-color:#b8975a; }
         <div class="poem-src" id="poem-src"></div>
       </div>
     </div>
+    <button class="share-btn" id="share-btn" onclick="shareCard()" style="display:none;">Share this reflection ↗</button>
     <button class="btn-back" onclick="goBack()">← Begin a new entry</button>
   </div>
 </main>
@@ -544,6 +560,9 @@ REGISTER 3 — ASSOCIATIVE/IMAGISTIC:
 What does this entry rhyme with beyond its surface? What image, philosophical territory, or unexpected shape does it open? This register produces the most surprising and precise matches — the ones the person could not have anticipated. Read the entry for what it resembles, not just what it says.
 
 THEN — ask: which thinker speaks most precisely to what this entry is actually carrying? Whether that is one register read with full depth, two registers in productive tension, or the unexpected place where all three converge. Let the reading lead — not the first thinker that surfaces.
+
+METACOGNITIVE CHECK — do this before committing to any thinker:
+Ask yourself: am I reaching for this thinker because they genuinely speak most precisely to this specific entry — its texture, its bodily shape, its associative rhymes — or because they are statistically associated with this type of entry in my training? Striving entries pull Han. Time entries pull Bergson. Conversation entries pull Levinas or Bakhtin. Body entries pull Merleau-Ponty. If you are reaching for the categorically associated thinker rather than the most precise match — stop. Go deeper. Find the thinker who speaks to the specific texture of this entry, not its general category. The right match is almost never the first one that surfaces.
 
 The match is a recognition: the reader arrives at a thinker or concept and feels something already present in their experience has now been seen. The tradition does not interpret the entry. It meets it.
 
@@ -899,6 +918,11 @@ async function renderResponse(entry,d){
     revealSecondTradition();
   }, d2 + 10500);
   window.scrollTo({top:0,behavior:'smooth'});
+  // Show share button after everything has loaded
+  setTimeout(() => {
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) shareBtn.style.display = 'block';
+  }, 3000);
 }
 
 function toggleEntry(){
@@ -923,12 +947,57 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+function shareCard(){
+  const line1 = document.getElementById('resonance-line1').textContent;
+  const line2 = document.getElementById('resonance-line2').textContent;
+  const concept = document.getElementById('concept-name').textContent;
+  const gloss = document.getElementById('concept-gloss').textContent;
+  const poem = document.getElementById('poem-text').textContent;
+  const poemAttr = document.getElementById('poem-attr').textContent;
+
+  // Build card HTML
+  const cardHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#ffffff; font-family:'Lora',Georgia,serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
+.card { max-width:540px; width:100%; padding:3rem; border:1px solid #e0d8c8; }
+.line1 { font-size:1.05rem; color:#1c1810; line-height:1.6; margin-bottom:0.4rem; }
+.line2 { font-size:1.05rem; font-weight:500; color:#9a5c20; line-height:1.6; margin-bottom:2rem; }
+.concept-name { font-family:sans-serif; font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#8a6a30; font-weight:700; margin-bottom:0.3rem; }
+.concept-gloss { font-size:0.9rem; color:#8a6a30; font-weight:600; line-height:1.7; margin-bottom:2rem; }
+.divider { display:flex; align-items:center; gap:1rem; margin:1.5rem 0; }
+.divider-line { flex:1; height:1px; background:#9a5c20; opacity:0.4; }
+.poem { font-size:0.95rem; font-style:italic; color:#1c1810; line-height:1.9; margin-bottom:0.5rem; white-space:pre-line; }
+.poem-attr { font-family:sans-serif; font-size:0.6rem; letter-spacing:0.15em; color:#9a8e7e; text-transform:uppercase; }
+.limen-tag { font-family:sans-serif; font-size:0.55rem; letter-spacing:0.3em; text-transform:uppercase; color:#c8b888; margin-top:2rem; text-align:right; }
+</style></head><body><div class="card">
+<div class="line1">${line1}</div>
+<div class="line2">${line2}</div>
+${concept ? `<div class="concept-name">${concept}</div><div class="concept-gloss">${gloss}</div>` : ''}
+<div class="divider"><div class="divider-line"></div><svg width="8" height="8" viewBox="0 0 10 10"><polygon points="5,0 6.5,3.5 10,5 6.5,6.5 5,10 3.5,6.5 0,5 3.5,3.5" fill="#9a5c20"/></svg><div class="divider-line"></div></div>
+<div class="poem">${poem}</div>
+<div class="poem-attr">${poemAttr}</div>
+<div class="limen-tag">Limen</div>
+</div></body></html>`;
+
+  const blob = new Blob([cardHtml], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
 function goBack(){
+  const shareBtn = document.getElementById('share-btn'); if(shareBtn) shareBtn.style.display='none';
   document.getElementById('response').style.display='none';
   document.getElementById('input-section').style.display='block';
   document.getElementById('journal-input').value='';
   document.getElementById('poetry-block').classList.remove('open');
   window.scrollTo({top:0,behavior:'smooth'});
+  // Show share button after everything has loaded
+  setTimeout(() => {
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) shareBtn.style.display = 'block';
+  }, 3000);
 }
 
 function showError(msg){const el=document.getElementById('error-msg');el.textContent=msg;el.style.display='block';}
