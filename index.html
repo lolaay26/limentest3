@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260401191815 -->
+<!DOCTYPE html><!-- v20260401193020 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -758,11 +758,11 @@ JSON only, no markdown:
   "concept_name": "Concept term if concept-led — MUST match primary thinker and opening exactly. Else empty string.",
   "concept_gloss": "One compressed clause under 20 words. Precise dictionary style. No interpretation beyond definition.",
   "primary_tradition": "Thinker · Tradition",
-  "primary_who": "EXACTLY 2 sentences — no more, no exceptions. Sentence 1: '[Name] was a [tradition word] who [one verb clause — what they refused, showed, or insisted]'. NO biographical details, NO 'spent their life', NO 'built his entire work'. Sentence 2: ONE short clause — what specific territory this entry shares with their work. Do not explain the entry. Do not interpret. Just name the shared territory.",
+  "primary_who": "ONE sentence only — starting with the philosopher's last name. '[Last name] [verb] [what they saw/refused/showed/insisted]'. The heading already names who they are — this sentence names what they did. e.g. 'Arendt refused to separate thinking from the question of what it means to act in a shared world.' 'Weil insisted that attention — real attention, not ambition — is the rarest form of intelligence.' NO 'was a philosopher who'. Just the name and what they did.",
   "primary_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only. If the quote is longer than 20 words, find a shorter one or use just the most essential phrase.",
   "relationship_type": "convergence/deepening/expansion/feminist resonance",
   "mirror_tradition": "Thinker · Tradition",
-  "mirror_who": "EXACTLY 2 sentences — no more, no exceptions. Same strict structure as primary_who.",
+  "mirror_who": "ONE sentence only. Same structure as primary_who — last name first, then what they did. No 'was a philosopher who'.",
   "mirror_quote": "Real verified quote — MAXIMUM 20 WORDS. Short. One clause only.",
   "mirror_relationship": "One sentence, 25 words maximum. Name BOTH thinkers. Sharp. What becomes visible holding them together.",
   "expansion": "EXACTLY 2 sentences — short, spoken, plain. Both thinkers named by name. Maximum 20 words per sentence. Level of the idea only. Never 'you' or 'your'. Never more than 2 sentences — if you write a third, delete it and shorten the first two instead.",
@@ -1104,6 +1104,13 @@ function shareCard(){
   win.document.write('<div class="pm">' + poem + '</div>');
   win.document.write('<div class="pa">' + poemAttr + '</div>');
   win.document.write('<div class="lt">LIMN</div>');
+  win.document.write('<div style="display:flex;gap:0.8rem;margin-top:1rem;">');
+  win.document.write('<button class="cb" onclick="saveImg()">Save as image</button>');
+  win.document.write('<button class="cb" onclick="shareCard()">Share</button>');
+  win.document.write('</div>');
+  win.document.write('<script>function shareCard(){var t=document.querySelector(\'.card\').innerText;if(navigator.share){navigator.share({title:\'Limn\',text:t})}else{navigator.clipboard.writeText(t).then(function(){alert(\'Copied to clipboard!\')});}}<\/script>');
+  win.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>');
+  win.document.write('<script>function saveImg(){html2canvas(document.querySelector(\'.card\'),{scale:2,backgroundColor:null}).then(function(c){var a=document.createElement(\'a\');a.download=\'limn-reflection.png\';a.href=c.toDataURL(\'image/png\');a.click()})}<\/script>');
   win.document.write('</div></body></html>');
   win.document.close();
 }
