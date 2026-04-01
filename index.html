@@ -113,15 +113,29 @@ textarea:focus { border-color:#b8975a; }
 .divider-line { flex:1; height:1px; background:#243850; opacity:0.25; }
 .divider-star { color:#9a5c20 !important; }
 .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2.4rem; }
-.art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; }
-.art-card img { width:100%; height:300px; object-fit:contain; display:block; background:#f8f5f0; }
-.art-ph { height:300px; background:linear-gradient(135deg,#ede7d9,#d5ccba); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
+.art-card { background:#faf7f0; border:1px solid #e0d8c8; box-shadow:0 3px 14px rgba(28,24,16,0.09); overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; }
+.art-card:hover { box-shadow:0 6px 24px rgba(28,24,16,0.16); }
+.art-card img { width:100%; height:300px; object-fit:cover; object-position:center top; display:block; background:#f0ebe0; }
+.art-card img.orient-portrait { object-fit:contain; object-position:center center; }
+.art-card img.orient-square { object-fit:contain; object-position:center center; }
+.art-ph { height:300px; background:#ede7d9; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; text-align:center; }
 .art-ph-t { font-style:italic; font-size:0.95rem; color:#4a4035; margin-bottom:0.4rem; line-height:1.4; }
 .art-ph-s { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); }
 .art-meta { padding:1rem 1.2rem; border-top:1px solid #e0d8c8; }
 .art-title { font-style:italic; font-size:1rem; color:#2d4260; margin-bottom:0.3rem; }
 .art-artist { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:var(--sub); margin-bottom:0.5rem; font-weight:500; }
-.art-why { font-size:0.95rem; color:#2d4260; line-height:1.8; font-style:normal; }
+.art-why { font-size:0.95rem; color:#9a5c20; line-height:1.8; font-style:normal; }
+/* ── LIGHTBOX ── */
+.art-lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,18,28,0.88); z-index:9997; align-items:center; justify-content:center; padding:2rem; }
+.art-lightbox.open { display:flex; }
+.art-lightbox-inner { background:#243850; max-width:680px; width:100%; max-height:90vh; overflow-y:auto; position:relative; }
+.art-lightbox-img { width:100%; max-height:60vh; object-fit:contain; object-position:center; display:block; background:#1a2d3e; }
+.art-lightbox-body { padding:1.5rem 1.8rem 2rem; }
+.art-lightbox-title { font-family:'Lora',Georgia,serif; font-style:italic; font-size:1.2rem; color:#f0e8d8; margin-bottom:0.4rem; line-height:1.4; }
+.art-lightbox-artist { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#8aa0b8; margin-bottom:1rem; font-weight:500; }
+.art-lightbox-why { font-family:'Lora',Georgia,serif; font-size:1rem; color:#c8782a; line-height:1.85; }
+.art-lightbox-close { position:absolute; top:1rem; right:1.2rem; font-family:sans-serif; font-size:0.58rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(245,240,232,0.4); background:none; border:none; cursor:pointer; z-index:1; }
+.art-lightbox-close:hover { color:#b8975a; }
 .poetry-section { margin-bottom:2.5rem; text-align:center; }
 .poetry-toggle { font-family:sans-serif; font-size:var(--sub-size); letter-spacing:var(--sub-space); text-transform:uppercase; color:#8a6a30; background:none; border:none; border-bottom:1px solid #243850; cursor:pointer; padding:0.4rem 0; font-weight:500; }
 .poetry-toggle:hover { color:#b8975a; border-color:#b8975a; }
@@ -344,236 +358,99 @@ textarea:focus { border-color:#b8975a; }
   </div>
 </main>
 
+<div class="art-lightbox" id="art-lightbox" onclick="closeLightbox(event)">
+  <div class="art-lightbox-inner" id="art-lightbox-inner">
+    <button class="art-lightbox-close" onclick="document.getElementById('art-lightbox').classList.remove('open')">close ✕</button>
+    <img class="art-lightbox-img" id="art-lightbox-img" src="" alt="" />
+    <div class="art-lightbox-body">
+      <div class="art-lightbox-title" id="art-lightbox-title"></div>
+      <div class="art-lightbox-artist" id="art-lightbox-artist"></div>
+      <div class="art-lightbox-why" id="art-lightbox-why"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-// Route all images through Cloudflare Worker proxy
-const PROXY = 'https://limen-images.laksea.workers.dev/?url=';
+// ── ART LIBRARY v2 — hardcoded direct URLs, no proxy, no runtime API calls ──
+// Wikimedia URLs are CORS-open. No proxy needed.
+// orient: L=landscape, P=portrait, S=square — controls object-fit
 
-// ── 80+ CURATED WORKS — AIC artwork IDs, images fetched at startup ──
-const AIC_WORKS = [
-  // JAPANESE
-  { key:'greatWave',       id:24645,  title:'Under the Wave off Kanagawa',         artist:'Katsushika Hokusai, 1831',          tradition:'Japanese Ukiyo-e' },
-  { key:'hiroshigeRain',   id:25865,  title:'Sudden Shower over Shin-Ōhashi',      artist:'Utagawa Hiroshige, 1857',           tradition:'Japanese Ukiyo-e' },
-  { key:'hiroshigePlum',   id:25819,  title:'Plum Park in Kameido',                artist:'Utagawa Hiroshige, 1857',           tradition:'Japanese Ukiyo-e' },
-  { key:'japanesePines',   id:14591,  title:'Pine Trees in Snow',                  artist:'Maruyama Ōkyo, c.1780',            tradition:'Japanese Edo Period' },
-  // CHINESE
-  { key:'chineseLandscape',id:44013,  title:'Landscape',                           artist:'Shitao, c.1700',                    tradition:'Chinese Ink Painting' },
-  // WEST AFRICAN
-  { key:'bauleFigure',     id:239464, title:'Female Figure',                       artist:'Baule people, Côte d\'Ivoire',     tradition:'West African' },
-  { key:'beninHead',       id:137125, title:'Head of an Oba',                      artist:'Benin Kingdom, Nigeria, 16th c.',  tradition:'West African Bronze' },
-  { key:'yorubaMask',      id:142395, title:'Helmet Mask (Sowei)',                 artist:'Sande society, Sierra Leone',      tradition:'West African' },
-  // CENTRAL AFRICAN
-  { key:'nkisiFigure',     id:94983,  title:'Power Figure (Nkisi)',                artist:'Kongo people, Congo',               tradition:'Central African' },
-  // ANCIENT EGYPTIAN
-  { key:'egyptMask',       id:313,    title:'Mummy Mask',                          artist:'Ancient Egyptian, 250–150 BCE',    tradition:'Ancient Egyptian' },
-  // ANCIENT GREEK
-  { key:'greekVase',       id:4800,   title:'Athenian Red-Figure Kylix',           artist:'Ancient Greek, c.480 BCE',         tradition:'Ancient Greek' },
-  // ISLAMIC / PERSIAN
-  { key:'islamicBowl',     id:229335, title:'Bowl with Calligraphic Decoration',   artist:'Iranian, 12th century',             tradition:'Islamic' },
-  { key:'iznikDish',       id:57496,  title:'Dish with Floral Motifs',             artist:'Ottoman, Iznik, c.1575',            tradition:'Islamic Ottoman' },
-  // INDIAN / SOUTH ASIAN
-  { key:'indianTextile',   id:109330, title:'Ceremonial Textile (Patolu)',         artist:'Indian, Gujarat, 18th century',    tradition:'Indian' },
-  { key:'mughalPortrait',  id:64884,  title:'Portrait of a Prince',                artist:'Indian, Mughal, 17th century',     tradition:'Indian Mughal' },
-  { key:'buddhistThangka', id:58855,  title:'Mandala of Chakrasamvara',            artist:'Tibetan, 19th century',             tradition:'Tibetan Buddhist' },
-  // PRE-COLUMBIAN / INDIGENOUS AMERICAS
-  { key:'aztecVessel',     id:65290,  title:'Vessel of Quetzalcóatl',              artist:'Aztec, 15th–16th century',         tradition:'Mesoamerican' },
-  { key:'peruTextile',     id:623,    title:'Four-Cornered Hat',                   artist:'Wari culture, Peru, c.600–1000',   tradition:'Andean' },
-  { key:'navajoTextile',   id:156468, title:'Navajo Blanket',                      artist:'Navajo people, c.1880',             tradition:'Indigenous North American' },
-  // MEDIEVAL EUROPEAN
-  { key:'medievalMS',      id:109438, title:'Leaf from a Book of Hours',           artist:'Flemish, c.1510',                   tradition:'Medieval European' },
-  // NORTHERN EUROPEAN
-  { key:'babel',           id:52975,  title:'The Tower of Babel',                  artist:'Pieter Bruegel the Elder, 1563',   tradition:'Flemish Renaissance' },
-  { key:'durer',           id:34153,  title:'Rhinoceros',                          artist:'Albrecht Dürer, 1515',             tradition:'German Renaissance' },
-  // ROMANTIC / REALIST
-  { key:'gleaners',        id:86385,  title:'The Gleaners',                        artist:'Jean-François Millet, 1857',       tradition:'French Realism' },
-  { key:'turnerStorm',     id:69475,  title:'Valley of Aosta: Snowstorm',          artist:'J.M.W. Turner, 1836–37',          tradition:'English Romanticism' },
-  { key:'corot',           id:25794,  title:'Interrupted Reading',                 artist:'Jean-Baptiste-Camille Corot, 1870',tradition:'French Realism' },
-  { key:'delacroix',       id:16122,  title:'Combat of the Giaour and Hassan',     artist:'Eugène Delacroix, 1826',           tradition:'French Romanticism' },
-  // SYMBOLIST
-  { key:'redonCyclops',    id:57819,  title:'The Cyclops',                         artist:'Odilon Redon, c.1914',             tradition:'French Symbolism' },
-  { key:'redonFlowers',    id:64818,  title:'Vase of Flowers',                     artist:'Odilon Redon, c.1910',             tradition:'French Symbolism' },
-  { key:'redonEyes',       id:49714,  title:'Closed Eyes',                         artist:'Odilon Redon, 1890',               tradition:'French Symbolism' },
-  { key:'klimtPortrait',   id:14966,  title:'Portrait of Sonja Knips',              artist:'Gustav Klimt, 1898',               tradition:'Vienna Secession' },
-  // IMPRESSIONIST / POST-IMPRESSIONIST
-  { key:'seurat',          id:27992,  title:'A Sunday on La Grande Jatte',         artist:'Georges Seurat, 1886',             tradition:'French Post-Impressionism' },
-  { key:'monetHaystacks',  id:26778,  title:'Stacks of Wheat',                     artist:'Claude Monet, 1890',               tradition:'French Impressionism' },
-  { key:'vanGoghBedroom',  id:28560,  title:'The Bedroom',                         artist:'Vincent van Gogh, 1889',           tradition:'Post-Impressionism' },
-  { key:'gauguinAre',      id:58736,  title:'Why Are You Angry?',                  artist:'Paul Gauguin, 1896',               tradition:'Post-Impressionism' },
-  { key:'cezanneBathers',  id:16327,  title:'The Large Bathers',                   artist:'Paul Cézanne, 1906',              tradition:'Post-Impressionism' },
-  { key:'toulouse',        id:2189,   title:'At the Moulin Rouge',                 artist:'Henri de Toulouse-Lautrec, 1892',  tradition:'French Post-Impressionism' },
-  // EARLY MODERN
-  { key:'picassoOld',      id:28067,  title:'The Old Guitarist',                   artist:'Pablo Picasso, 1903–04',          tradition:'European Modernism' },
-  { key:'matisseBathers',  id:36867,  title:'Bathers by a River',                  artist:'Henri Matisse, 1916',              tradition:'European Modernism' },
-  { key:'kandinsky',       id:146702, title:'Composition',                         artist:'Wassily Kandinsky, 1913',          tradition:'European Abstraction' },
-  { key:'klee',            id:99766,  title:'Angel Applicant',                     artist:'Paul Klee, 1939',                  tradition:'European Modernism' },
-  { key:'chagall',         id:59426,  title:'The Praying Jew',                     artist:'Marc Chagall, 1923',               tradition:'European Modernism' },
-  // AMERICAN MODERN
-  { key:'nighthawks',      id:111628, title:'Nighthawks',                          artist:'Edward Hopper, 1942',              tradition:'American Realism' },
-  { key:'americanGothic',  id:6565,   title:'American Gothic',                     artist:'Grant Wood, 1930',                 tradition:'American Regionalism' },
-  { key:'okeeffe',         id:100858, title:'Sky Above Clouds IV',                 artist:'Georgia O\'Keeffe, 1965',          tradition:'American Modernism' },
-  { key:'homer',           id:16776,  title:'The Blue Boat',                       artist:'Winslow Homer, 1892',              tradition:'American Realism' },
-  { key:'catlett',         id:142581, title:'Sharecropper',                        artist:'Elizabeth Catlett, 1952',          tradition:'African American' },
-  // LATIN AMERICAN
-  { key:'siqueirosMother', id:50891,  title:'The Sob',                             artist:'David Alfaro Siqueiros, 1939',     tradition:'Mexican Muralism' },
-  // ABSTRACT EXPRESSIONIST
-  { key:'rothko',          id:82410,  title:'Untitled (Painting)',                  artist:'Mark Rothko, 1953-54',             tradition:'Abstract Expressionism' },
-  { key:'pollock',         id:108963, title:'Greyed Rainbow',                      artist:'Jackson Pollock, 1953',            tradition:'Abstract Expressionism' },
-  // PHOTOGRAPHY
-  { key:'stieglitz',       id:97910,  title:'The Steerage',                        artist:'Alfred Stieglitz, 1907',           tradition:'American Photography' },
-  { key:'evansStore',      id:100471, title:'Storefront',                          artist:'Walker Evans, 1936',               tradition:'Documentary Photography' },
-  // SCIENTIFIC ILLUSTRATION
-  { key:'haeckel',         id:44118,  title:'Kunstformen der Natur',               artist:'Ernst Haeckel, 1904',              tradition:'Scientific Illustration' },
-  { key:'audubon',         id:20509,  title:'Great Blue Heron',                    artist:'John James Audubon, 1827',         tradition:'Natural History Illustration' },
-  // EUROPEAN OLD MASTERS
-  { key:'elGreco',         id:46289,  title:'Assumption of the Virgin',            artist:'El Greco, 1577–79',               tradition:'Spanish Renaissance' },
-  { key:'goya',            id:30069,  title:'Witches\' Sabbath',                  artist:'Francisco Goya, 1823',             tradition:'Spanish Romanticism' },
-  { key:'velazquez',       id:55708,  title:'The Servant',                         artist:'Diego Velázquez, c.1618',         tradition:'Spanish Baroque' },
-];
-
-const ART = {};
-// AIC IIIF direct image URLs — bypasses all API calls
-// Format: https://www.artic.edu/iiif/2/{image_id}/full/600,/0/default.jpg
-const AIC_IMAGE_IDS = {
-  'greatWave':      '25c31d8d-21a4-9ea1-1d73-6a2eca4dda7e',
-  'hiroshigeRain':  'fb60f679-40b5-8936-10e7-54ef71bcde87',
-  'hiroshigePlum':  '9cd18027-af25-a82a-cdde-d1e469b37041',
-  'seurat':         '1adf2696-8489-499b-cad2-821d7fde4b33',
-  'monetHaystacks': '1e0b7b73-7a67-81a0-b312-2b9736e47d10',
-  'vanGoghBedroom': '25c31d8d-21a4-9ea1-1d73-6a2eca4dda7e',
-  'nighthawks':     'a9f88f26-5dd9-d2de-8e41-5d4f0e0e2e6d',
-  'americanGothic': 'a9f88f26-5dd9-d2de-8e41-5d4f0e0e2e6d',
-  'rothko':         '82410-main',
-  'pollock':        '108963-main',
+const ART = {
+  greatWave:       { title:'Under the Wave off Kanagawa',         artist:'Katsushika Hokusai, 1831',           tradition:'Japanese Ukiyo-e',              orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/800px-Tsunami_by_hokusai_19th_century.jpg' },
+  hiroshigeRain:   { title:'Sudden Shower over Shin-\u014chashi',      artist:'Utagawa Hiroshige, 1857',            tradition:'Japanese Ukiyo-e',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hiroshige_Ohashi_Atake_no_Yudachi.jpg/500px-Hiroshige_Ohashi_Atake_no_Yudachi.jpg' },
+  hiroshigePlum:   { title:'Plum Park in Kameido',                artist:'Utagawa Hiroshige, 1857',            tradition:'Japanese Ukiyo-e',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Hiroshige_Kameido_Ume_Yashiki.jpg/500px-Hiroshige_Kameido_Ume_Yashiki.jpg' },
+  japanesePines:   { title:'Pine Trees in Snow',                  artist:'Maruyama \u014ckyo, c.1780',             tradition:'Japanese Edo Period',           orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/800px-Okyo_pines.jpg' },
+  hokusaiFuji:     { title:'Fine Wind, Clear Morning (Red Fuji)', artist:'Katsushika Hokusai, c.1831',         tradition:'Japanese Ukiyo-e',              orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Red_Fuji_southern_wind_clear_morning.jpg/800px-Red_Fuji_southern_wind_clear_morning.jpg' },
+  fanKuan:         { title:'Travelers Among Mountains and Streams',artist:'Fan Kuan, c.1000 CE',               tradition:'Chinese Song Dynasty Painting', orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Fan_Kuan_-_Travellers_among_Mountains_and_Streams_-_Google_Art_Project.jpg/500px-Fan_Kuan_-_Travellers_among_Mountains_and_Streams_-_Google_Art_Project.jpg' },
+  chineseLandscape:{ title:'Landscape',                           artist:'Shitao, c.1700',                     tradition:'Chinese Ink Painting',          orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Shitao_-_Landscape.jpg/500px-Shitao_-_Landscape.jpg' },
+  beninHead:       { title:'Head of an Oba',                      artist:'Benin Kingdom, Nigeria, 16th c.',    tradition:'West African Bronze',           orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Benin_Bronze_head_of_an_Oba.jpg/400px-Benin_Bronze_head_of_an_Oba.jpg' },
+  dogonCouple:     { title:'Seated Couple',                       artist:'Dogon people, Mali, 16th\u201318th c.', tradition:'West African',                  orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Dogon_couple_Met.jpg/400px-Dogon_couple_Met.jpg' },
+  egyptMask:       { title:'Mummy Mask',                          artist:'Ancient Egyptian, 250\u2013150 BCE',    tradition:'Ancient Egyptian',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg/500px-Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg' },
+  greekVase:       { title:'Athenian Red-Figure Kylix',           artist:'Ancient Greek, c.480 BCE',           tradition:'Ancient Greek',                 orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg/600px-Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg' },
+  islamicBowl:     { title:'Bowl with Calligraphic Decoration',   artist:'Iranian, 12th century',              tradition:'Islamic',                       orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bowl_with_Kufic_Inscription_Met_Museum.jpg/600px-Bowl_with_Kufic_Inscription_Met_Museum.jpg' },
+  persianMiniature:{ title:'Layla and Majnun at School',          artist:'Nizami, Khamsa \u2014 Persian, 1524', tradition:'Persian Miniature',             orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Layla_and_Majnun_at_School_BL_Or_6810_f.18a.jpg/500px-Layla_and_Majnun_at_School_BL_Or_6810_f.18a.jpg' },
+  dancingDervish:  { title:'Whirling Dervishes',                  artist:'Ottoman, c.1600',                    tradition:'Islamic Ottoman',               orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Whirling_Dervishes_Walters_W658_10B.jpg/500px-Whirling_Dervishes_Walters_W658_10B.jpg' },
+  iznikDish:       { title:'Dish with Floral Motifs',             artist:'Ottoman, Iznik, c.1575',             tradition:'Islamic Ottoman',               orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Iznik_dish_British_Museum.jpg/600px-Iznik_dish_British_Museum.jpg' },
+  mughalPortrait:  { title:'Portrait of a Prince on Horseback',   artist:'Indian, Mughal, 17th century',       tradition:'Indian Mughal',                 orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mughal_Prince_on_Horseback.jpg/500px-Mughal_Prince_on_Horseback.jpg' },
+  buddhistThangka: { title:'Mandala of Chakrasamvara',            artist:'Tibetan, 19th century',              tradition:'Tibetan Buddhist',              orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Chakrasamvara_mandala_Nyingma.jpg/600px-Chakrasamvara_mandala_Nyingma.jpg' },
+  ajantaCave:      { title:'Bodhisattva Padmapani',               artist:'Ajanta Caves, India, c.480 CE',      tradition:'Indian Buddhist',               orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Padmapani_Ajanta.jpg/500px-Padmapani_Ajanta.jpg' },
+  navajoTextile:   { title:'Navajo Chief Blanket',                artist:'Navajo people, c.1860\u201365',         tradition:'Indigenous North American',     orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Navajo_-_Chief_Blanket%2C_Third_Phase_-_Google_Art_Project.jpg/800px-Navajo_-_Chief_Blanket%2C_Third_Phase_-_Google_Art_Project.jpg' },
+  lascaux:         { title:'Hall of the Bulls',                   artist:'Paleolithic, c.17000 BCE',           tradition:'Prehistoric Cave Art',          orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/800px-Lascaux_painting.jpg' },
+  medievalMS:      { title:'Leaf from a Book of Hours',           artist:'Flemish, c.1510',                    tradition:'Medieval European',             orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Book_of_Hours_Morgan_Library.jpg/500px-Book_of_Hours_Morgan_Library.jpg' },
+  hildegardVision: { title:'Cosmic Vision (Liber Scivias)',       artist:'Hildegard of Bingen, c.1165',        tradition:'Medieval Illumination',         orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meister_des_Hildegardis-Codex_002.jpg/600px-Meister_des_Hildegardis-Codex_002.jpg' },
+  babel:           { title:'The Tower of Babel',                  artist:'Pieter Bruegel the Elder, 1563',     tradition:'Flemish Renaissance',           orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg/800px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg' },
+  durer:           { title:'Rhinoceros',                          artist:'Albrecht D\u00fcrer, 1515',              tradition:'German Renaissance',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Duerer_Rhinoceros.jpg/800px-Duerer_Rhinoceros.jpg' },
+  boschGarden:     { title:'The Garden of Earthly Delights',      artist:'Hieronymus Bosch, c.1490\u20131510',    tradition:'Early Netherlandish',           orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/The_Garden_of_earthly_delights.jpg/500px-The_Garden_of_earthly_delights.jpg' },
+  vermeerLace:     { title:'The Lacemaker',                       artist:'Johannes Vermeer, c.1669\u201370',      tradition:'Dutch Golden Age',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Johannes_Vermeer_-_The_lacemaker_%28c.1669-1671%29.jpg/500px-Johannes_Vermeer_-_The_lacemaker_%28c.1669-1671%29.jpg' },
+  gleaners:        { title:'The Gleaners',                        artist:'Jean-Fran\u00e7ois Millet, 1857',        tradition:'French Realism',                orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/800px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg' },
+  turnerStorm:     { title:'Snow Storm: Steam-Boat off a Harbour\u2019s Mouth', artist:'J.M.W. Turner, 1842', tradition:'English Romanticism',           orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg/800px-Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg' },
+  corot:           { title:'Interrupted Reading',                 artist:'Jean-Baptiste-Camille Corot, 1870',  tradition:'French Realism',                orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg/500px-Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg' },
+  delacroix:       { title:'Liberty Leading the People',          artist:'Eug\u00e8ne Delacroix, 1830',            tradition:'French Romanticism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Eug%C3%A8ne_Delacroix_-_La_libert%C3%A9_guidant_le_peuple.jpg/800px-Eug%C3%A8ne_Delacroix_-_La_libert%C3%A9_guidant_le_peuple.jpg' },
+  casparDavid:     { title:'Wanderer Above the Sea of Fog',       artist:'Caspar David Friedrich, c.1818',     tradition:'German Romanticism',            orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/500px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg' },
+  redonCyclops:    { title:'The Cyclops',                         artist:'Odilon Redon, c.1914',               tradition:'French Symbolism',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/500px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg' },
+  redonFlowers:    { title:'Vase of Flowers',                     artist:'Odilon Redon, c.1910',               tradition:'French Symbolism',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/500px-Odilon_Redon_-_Vase_of_Flowers.jpg' },
+  redonEyes:       { title:'Closed Eyes',                         artist:'Odilon Redon, 1890',                 tradition:'French Symbolism',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/500px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg' },
+  klimtKiss:       { title:'The Kiss',                            artist:'Gustav Klimt, 1907\u201308',             tradition:'Vienna Secession',              orient:'S', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/700px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg' },
+  klimtPortrait:   { title:'Portrait of Sonja Knips',             artist:'Gustav Klimt, 1898',                 tradition:'Vienna Secession',              orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg/500px-Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg' },
+  munchScream:     { title:'The Scream',                          artist:'Edvard Munch, 1893',                 tradition:'Expressionism',                 orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_Scream_by_Edvard_Munch%2C_1893_-_Nasjonalgalleriet.png/500px-The_Scream_by_Edvard_Munch%2C_1893_-_Nasjonalgalleriet.png' },
+  seurat:          { title:'A Sunday on La Grande Jatte',         artist:'Georges Seurat, 1886',               tradition:'French Post-Impressionism',     orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg/800px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg' },
+  monetHaystacks:  { title:'Stacks of Wheat (End of Summer)',     artist:'Claude Monet, 1890',                 tradition:'French Impressionism',          orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg/800px-Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg' },
+  monetWaterlilies:{ title:'Water Lilies',                        artist:'Claude Monet, 1906',                 tradition:'French Impressionism',          orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/800px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg' },
+  vanGoghBedroom:  { title:'The Bedroom',                         artist:'Vincent van Gogh, 1889',             tradition:'Post-Impressionism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg/800px-Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg' },
+  vanGoghStarry:   { title:'The Starry Night',                    artist:'Vincent van Gogh, 1889',             tradition:'Post-Impressionism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/800px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg' },
+  vanGoghWheatfield:{ title:'Wheatfield with Crows',              artist:'Vincent van Gogh, 1890',             tradition:'Post-Impressionism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Vincent_van_Gogh_-_Wheat_Field_with_Crows_-_Google_Art_Project.jpg/800px-Vincent_van_Gogh_-_Wheat_Field_with_Crows_-_Google_Art_Project.jpg' },
+  gauguinAre:      { title:'Why Are You Angry?',                  artist:'Paul Gauguin, 1896',                 tradition:'Post-Impressionism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Paul_Gauguin_-_Nave_Nave_Mahana.jpg/800px-Paul_Gauguin_-_Nave_Nave_Mahana.jpg' },
+  cezanneBathers:  { title:'The Large Bathers',                   artist:'Paul C\u00e9zanne, 1906',                tradition:'Post-Impressionism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg/800px-Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg' },
+  toulouse:        { title:'At the Moulin Rouge',                 artist:'Henri de Toulouse-Lautrec, 1892',    tradition:'French Post-Impressionism',     orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg/800px-Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg' },
+  picassoOld:      { title:'The Old Guitarist',                   artist:'Pablo Picasso, 1903\u201304',            tradition:'European Modernism',            orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Old_guitarist_chicago.jpg/500px-Old_guitarist_chicago.jpg' },
+  matisseDance:    { title:'The Dance',                           artist:'Henri Matisse, 1910',                tradition:'European Modernism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Matisse_-_Dance_%28I%29_1909.jpg/800px-Matisse_-_Dance_%28I%29_1909.jpg' },
+  matisseBathers:  { title:'Bathers by a River',                  artist:'Henri Matisse, 1916',                tradition:'European Modernism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg/800px-Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg' },
+  kandinsky:       { title:'Composition VII',                     artist:'Wassily Kandinsky, 1913',            tradition:'European Abstraction',          orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg/800px-Vassily_Kandinsky%2C_1913_-_Composition_7.jpg' },
+  klee:            { title:'Angelus Novus',                       artist:'Paul Klee, 1920',                    tradition:'European Modernism',            orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Paul_Klee_-_Angelus_Novus.jpg/500px-Paul_Klee_-_Angelus_Novus.jpg' },
+  chagall:         { title:'The Praying Jew',                     artist:'Marc Chagall, 1923',                 tradition:'European Modernism',            orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg/500px-Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg' },
+  nighthawks:      { title:'Nighthawks',                          artist:'Edward Hopper, 1942',                tradition:'American Realism',              orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Nighthawks_by_Edward_Hopper_1942.jpg/800px-Nighthawks_by_Edward_Hopper_1942.jpg' },
+  americanGothic:  { title:'American Gothic',                     artist:'Grant Wood, 1930',                   tradition:'American Regionalism',          orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Grant_DeVolson_Wood_-_American_Gothic.jpg/500px-Grant_DeVolson_Wood_-_American_Gothic.jpg' },
+  okeeffe:         { title:'Sky Above Clouds IV',                 artist:"Georgia O'Keeffe, 1965",             tradition:'American Modernism',            orient:'L', url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg/800px-Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg" },
+  homer:           { title:'The Blue Boat',                       artist:'Winslow Homer, 1892',                tradition:'American Realism',              orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Winslow_Homer_-_The_Blue_Boat.jpg/800px-Winslow_Homer_-_The_Blue_Boat.jpg' },
+  fridaRoots:      { title:'Roots (Ra\u00edces)',                      artist:'Frida Kahlo, 1943',                  tradition:'Mexican Surrealism',            orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Frida_Kahlo%2C_Roots%2C_1943.jpg/800px-Frida_Kahlo%2C_Roots%2C_1943.jpg' },
+  stieglitz:       { title:'The Steerage',                        artist:'Alfred Stieglitz, 1907',             tradition:'American Photography',          orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg/500px-Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg' },
+  haeckel:         { title:'Kunstformen der Natur \u2014 Radiolaria',   artist:'Ernst Haeckel, 1904',                tradition:'Scientific Illustration',       orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Haeckel_Radiolaria.jpg/600px-Haeckel_Radiolaria.jpg' },
+  audubon:         { title:'Great Blue Heron',                    artist:'John James Audubon, 1827',           tradition:'Natural History Illustration',  orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Audubon_Great_Blue_Heron.jpg/500px-Audubon_Great_Blue_Heron.jpg' },
+  elGreco:         { title:'The Burial of the Count of Orgaz',    artist:'El Greco, 1586\u201388',                 tradition:'Spanish Renaissance',           orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/El_Greco_-_El_entierro_del_se%C3%B1or_de_Orgaz.jpg/500px-El_Greco_-_El_entierro_del_se%C3%B1or_de_Orgaz.jpg' },
+  goya:            { title:'Saturn Devouring His Son',            artist:'Francisco Goya, 1819\u201323',           tradition:'Spanish Romanticism',           orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg/500px-Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg' },
+  velazquez:       { title:'Las Meninas',                         artist:'Diego Vel\u00e1zquez, 1656',              tradition:'Spanish Baroque',               orient:'P', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/500px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg' },
+  caravaggio:      { title:'The Calling of Saint Matthew',        artist:'Caravaggio, 1599\u20131600',             tradition:'Italian Baroque',               orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg/800px-The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg' },
+  rembrandt:       { title:'The Night Watch',                     artist:'Rembrandt van Rijn, 1642',           tradition:'Dutch Golden Age',              orient:'L', url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Rembrandt_van_Rijn-De_Nachtwacht-1642.jpg/800px-Rembrandt_van_Rijn-De_Nachtwacht-1642.jpg' },
+  gettyDegas:      { title:'Waiting (L\u2019Attente)',                  artist:'Edgar Degas, c.1880\u201382',            tradition:'French Impressionism',          orient:'L', url:'https://media.getty.edu/iiif/image/9e6039bd-e0e7-4b2b-9816-b80c09c19dc4/full/843,/0/default.jpg' },
+  gettyIrisVG:     { title:'Irises',                              artist:'Vincent van Gogh, 1889',             tradition:'Post-Impressionism',            orient:'L', url:'https://media.getty.edu/iiif/image/dc3b4279-f838-4a10-a23e-dcd0d6d0b990/full/843,/0/default.jpg' },
+  gettyMagritte:   { title:'The Treachery of Images',             artist:'Ren\u00e9 Magritte, 1929',               tradition:'Surrealism',                    orient:'L', url:'https://media.getty.edu/iiif/image/6e098c4b-4dd5-4b7b-a0d9-e8f67f5c0b05/full/843,/0/default.jpg' },
+  gettyRembrandt:  { title:'An Old Man in Military Costume',      artist:'Rembrandt van Rijn, c.1630\u201331',     tradition:'Dutch Golden Age',              orient:'P', url:'https://media.getty.edu/iiif/image/f90f5cd7-67c2-4701-805c-4faf7eba6aa4/full/843,/0/default.jpg' },
 };
 
-// Comprehensive Wikimedia fallbacks for known works
-const WIKI_FALLBACKS = {
-  'greatWave':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/600px-Tsunami_by_hokusai_19th_century.jpg',
-  'hiroshigeRain':  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hiroshige_Ohashi_Atake_no_Yudachi.jpg/600px-Hiroshige_Ohashi_Atake_no_Yudachi.jpg',
-  'hiroshigePlum':  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Hiroshige_Kameido_Ume_Yashiki.jpg/600px-Hiroshige_Kameido_Ume_Yashiki.jpg',
-  'japanesePines':  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Okyo_pines.jpg/600px-Okyo_pines.jpg',
-  'gleaners':       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg/600px-Jean-Fran%C3%A7ois_Millet_-_Gleaners_-_Google_Art_Project_2.jpg',
-  'babel':          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg/600px-Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_%28Vienna%29_-_Google_Art_Project.jpg',
-  'lascaux':        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lascaux_painting.jpg/600px-Lascaux_painting.jpg',
-  'redonEyes':      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_Closed_Eyes_-_Google_Art_Project.jpg',
-  'redonCyclops':   'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg/600px-Odilon_Redon_-_The_Cyclops_-_Google_Art_Project.jpg',
-  'redonFlowers':   'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Odilon_Redon_-_Vase_of_Flowers.jpg/600px-Odilon_Redon_-_Vase_of_Flowers.jpg',
-  'vanGoghBedroom': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg/600px-Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg',
-  'seurat':         'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg/600px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884-86.jpg',
-  'monetHaystacks': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg/600px-Claude_Monet_-_Wheatstacks_%28End_of_Summer%29.jpg',
-  'nighthawks':     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Nighthawks_by_Edward_Hopper_1942.jpg/600px-Nighthawks_by_Edward_Hopper_1942.jpg',
-  'americanGothic': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Grant_DeVolson_Wood_-_American_Gothic.jpg/600px-Grant_DeVolson_Wood_-_American_Gothic.jpg',
-  'durer':          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Duerer_Rhinoceros.jpg/600px-Duerer_Rhinoceros.jpg',
-  'elGreco':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/El_Greco_-_The_Assumption_of_the_Virgin_-_Google_Art_Project.jpg/600px-El_Greco_-_The_Assumption_of_the_Virgin_-_Google_Art_Project.jpg',
-  'goya':           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg/600px-Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg',
-  'toulouse':       'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg/600px-Toulouse-Lautrec_-_At_the_Moulin_Rouge%2C_1892-95.jpg',
-  'corot':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg/600px-Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg',
-  'dancingDervish': 'https://collectionapi.metmuseum.org/api/collection/v1/iiif/446892/preview',
-  'persianGarden':  'https://collectionapi.metmuseum.org/api/collection/v1/iiif/451403/preview',
-  'haeckel':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Haeckel_Radiolaria.jpg/600px-Haeckel_Radiolaria.jpg',
-  'audubon':        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Audubon_Great_Blue_Heron.jpg/600px-Audubon_Great_Blue_Heron.jpg',
-  'stieglitz':      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg/600px-Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg',
-  'gauguinAre':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Paul_Gauguin_-_Nave_Nave_Mahana.jpg/600px-Paul_Gauguin_-_Nave_Nave_Mahana.jpg',
-  'kandinsky':      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg/600px-Vassily_Kandinsky%2C_1913_-_Composition_7.jpg',
-  'chagall':        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg/600px-Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg',
-  'velazquez':      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg/600px-Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg',
-  'delacroix':      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/600px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg',
-  'cezanneBathers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg/600px-Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg',
-  'matisseBathers': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg/600px-Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg',
-  'klee':           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Paul_Klee_-_Angelus_Novus.jpg/600px-Paul_Klee_-_Angelus_Novus.jpg',
-  'rothko':         'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Rothko_No_61.jpg/600px-Rothko_No_61.jpg',
-  'pollock':        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Pollock_No_5_1948.jpg/600px-Pollock_No_5_1948.jpg',
-  'okeeffe':        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg/600px-Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg',
-  'homer':          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Winslow_Homer_-_The_Blue_Boat.jpg/600px-Winslow_Homer_-_The_Blue_Boat.jpg',
-  'evansStore':     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Walker_Evans_-_Penny_Picture_Display%2C_Savannah%2C_1936.jpg/600px-Walker_Evans_-_Penny_Picture_Display%2C_Savannah%2C_1936.jpg',
-  'klimtPortrait':  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg/600px-Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg',
-  'turnerStorm':    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg/600px-Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg',
-  'corot':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg/600px-Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg',
-  'egyptMask':      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg/600px-Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg',
-  'greekVase':      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg/600px-Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg',
-  'buddhistThangka':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Chakrasamvara_mandala_Nyingma.jpg/600px-Chakrasamvara_mandala_Nyingma.jpg',
-  'mughalPortrait': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mughal_Prince_on_Horseback.jpg/600px-Mughal_Prince_on_Horseback.jpg',
-  'islamicBowl':    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bowl_with_Kufic_Inscription_Met_Museum.jpg/600px-Bowl_with_Kufic_Inscription_Met_Museum.jpg',
-  'medievalMS':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Book_of_Hours_Morgan_Library.jpg/600px-Book_of_Hours_Morgan_Library.jpg',
-  'chineseLandscape':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Shitao_-_Landscape.jpg/600px-Shitao_-_Landscape.jpg',
-};
+// ART_LOAD_PROMISE — instant resolve, all URLs are hardcoded
+const ART_LOAD_PROMISE = Promise.resolve();
 
-const ART_LOAD_PROMISE = (async () => {
-  // Get AIC metadata (titles, artists, traditions) — this works fine
-  const batch1 = AIC_WORKS.slice(0, 50).map(w => w.id).join(',');
-  const batch2 = AIC_WORKS.slice(50).map(w => w.id).join(',');
-  const aicMeta = {};
-  for (const ids of [batch1, batch2]) {
-    if (!ids) continue;
-    try {
-      const res = await fetch(`https://api.artic.edu/api/v1/artworks?ids=${ids}&fields=id,title,artist_display&limit=50`);
-      const data = await res.json();
-      (data.data || []).forEach(item => { aicMeta[item.id] = item; });
-    } catch(e) {}
-  }
-
-  // For each work, find image via Met Museum API (allows Cloudflare requests)
-  async function getMetImage(searchQuery) {
-    try {
-      const searchRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=${encodeURIComponent(searchQuery)}`);
-      const searchData = await searchRes.json();
-      if (!searchData.objectIDs?.length) return null;
-      // Try more results to find a painting/artwork not a portrait photo
-      const excludeTypes = ['photograph', 'gelatin silver print', 'albumen print', 'daguerreotype', 'chromogenic print'];
-      for (let i = 0; i < Math.min(8, searchData.objectIDs.length); i++) {
-        const objRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${searchData.objectIDs[i]}`);
-        const obj = await objRes.json();
-        if (!obj.primaryImageSmall || !obj.isPublicDomain) continue;
-        const medium = (obj.medium || '').toLowerCase();
-        const objType = (obj.objectName || '').toLowerCase();
-        const isPhoto = excludeTypes.some(t => medium.includes(t) || objType.includes(t));
-        if (!isPhoto) return `${PROXY}${encodeURIComponent(obj.primaryImageSmall)}`;
-      }
-      return null;
-    } catch(e) { return null; }
-  }
-
-  // Also try Wikimedia as fallback
-  async function getWikiImage(searchQuery) {
-    try {
-      const searchRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&srnamespace=6&srlimit=5&format=json&origin=*`);
-      const searchData = await searchRes.json();
-      const results = searchData?.query?.search;
-      if (!results?.length) return null;
-      for (const result of results.slice(0, 3)) {
-        const infoRes = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(result.title)}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=600&format=json&origin=*`);
-        const infoData = await infoRes.json();
-        const page = Object.values(infoData?.query?.pages || {})[0];
-        const imgUrl = page?.imageinfo?.[0]?.thumburl;
-        if (imgUrl) return `${PROXY}${encodeURIComponent(imgUrl)}`;
-      }
-      return null;
-    } catch(e) { return null; }
-  }
-
-  // Load images in staggered batches to avoid rate limiting
-  const batchSize = 8;
-  for (let i = 0; i < AIC_WORKS.length; i += batchSize) {
-    const batch = AIC_WORKS.slice(i, i + batchSize);
-    await Promise.all(batch.map(async w => {
-      const searchQuery = `${w.artist.split(',')[0]} ${w.title.split('(')[0].trim()}`;
-      let imgUrl = await getMetImage(searchQuery) || await getWikiImage(searchQuery);
-      ART[w.key] = {
-        url: imgUrl || null,
-        title: w.title,
-        artist: w.artist,
-        tradition: w.tradition
-      };
-    }));
-    if (i + batchSize < AIC_WORKS.length) {
-      await new Promise(r => setTimeout(r, 200));
-    }
-  }
-
-  const loaded = Object.values(ART).filter(a => a.url).length;
-  console.log(`ART library loaded: ${loaded} of ${AIC_WORKS.length} works with images`);
-})();
-
-const ART_KEYS = AIC_WORKS.map(w => `${w.key} (${w.title} · ${w.tradition})`).join(', ');
+const ART_KEYS = Object.entries(ART).map(([key, w]) => `${key} (${w.title} \u00b7 ${w.tradition})`).join(', ');
 
 const RELATIONSHIP_LABELS = {
   convergence:'Two traditions, one territory',
@@ -912,9 +789,14 @@ async function renderResponse(entry,d){
 
   function renderArtCard(card, art, why) {
     const img = document.createElement('img');
-    img.style.cssText = '';
     img.alt = art.title;
+    if (art.orient === 'P' || art.orient === 'S') img.classList.add('orient-' + (art.orient === 'P' ? 'portrait' : 'square'));
     img.onerror = function() {
+      if (!this.dataset.retried) {
+        this.dataset.retried = '1';
+        const smaller = (art.url || '').replace(/\/\d+px-/, '/400px-');
+        if (smaller !== art.url) { this.src = smaller; return; }
+      }
       this.style.display = 'none';
       const ph = document.createElement('div');
       ph.className = 'art-ph';
@@ -927,6 +809,7 @@ async function renderResponse(entry,d){
     meta.innerHTML = `<div class="art-title">${art.title}</div><div class="art-artist">${art.artist} · ${art.tradition}</div><div class="art-why">${why}</div>`;
     card.appendChild(img);
     card.appendChild(meta);
+    card.addEventListener('click', () => openLightbox(art, why));
   }
 
   function renderArtPlaceholder(card, title, tradition, why) {
@@ -1170,6 +1053,24 @@ ${concept ? `<div class="concept-name">${concept}</div><div class="concept-gloss
   const blob = new Blob([cardHtml], {type:'text/html'});
   const url = URL.createObjectURL(blob);
   window.open(url, '_blank');
+}
+
+function openLightbox(art, why) {
+  const lb = document.getElementById('art-lightbox');
+  const img = document.getElementById('art-lightbox-img');
+  img.src = art.url || '';
+  img.alt = art.title;
+  img.className = 'art-lightbox-img' + (art.orient === 'P' ? ' orient-portrait' : art.orient === 'S' ? ' orient-square' : '');
+  document.getElementById('art-lightbox-title').textContent = art.title;
+  document.getElementById('art-lightbox-artist').textContent = art.artist + ' · ' + art.tradition;
+  document.getElementById('art-lightbox-why').textContent = why;
+  lb.classList.add('open');
+}
+
+function closeLightbox(e) {
+  if (e.target === document.getElementById('art-lightbox')) {
+    document.getElementById('art-lightbox').classList.remove('open');
+  }
 }
 
 function closeAbout(e){
