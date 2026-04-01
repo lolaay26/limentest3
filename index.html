@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- v20260331194343 -->
+<!DOCTYPE html><!-- v20260401134933 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -374,6 +374,24 @@ const WIKI_FALLBACKS = {
   'chagall':        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg/600px-Marc_Chagall%2C_1923_-_The_Praying_Jew.jpg',
   'velazquez':      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg/600px-Diego_Velazquez_-_Kitchen_Maid_with_the_Supper_at_Emmaus_-_Google_Art_Project.jpg',
   'delacroix':      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/600px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg',
+  'cezanneBathers': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg/600px-Paul_C%C3%A9zanne_-_Les_Grandes_Baigneuses_%28London%29.jpg',
+  'matisseBathers': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg/600px-Henri_Matisse%2C_1916-17%2C_Bathers_by_a_River%2C_oil_on_canvas%2C_260_x_392_cm%2C_Art_Institute_of_Chicago.jpg',
+  'klee':           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Paul_Klee_-_Angelus_Novus.jpg/600px-Paul_Klee_-_Angelus_Novus.jpg',
+  'rothko':         'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Rothko_No_61.jpg/600px-Rothko_No_61.jpg',
+  'pollock':        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Pollock_No_5_1948.jpg/600px-Pollock_No_5_1948.jpg',
+  'okeeffe':        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg/600px-Georgia_O%27Keeffe_-_Sky_Above_Clouds_IV.jpg',
+  'homer':          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Winslow_Homer_-_The_Blue_Boat.jpg/600px-Winslow_Homer_-_The_Blue_Boat.jpg',
+  'evansStore':     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Walker_Evans_-_Penny_Picture_Display%2C_Savannah%2C_1936.jpg/600px-Walker_Evans_-_Penny_Picture_Display%2C_Savannah%2C_1936.jpg',
+  'klimtPortrait':  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg/600px-Gustav_Klimt_-_Sonja_Knips_-_Google_Art_Project.jpg',
+  'turnerStorm':    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg/600px-Turner%2C_J._M._W._-_Snow_Storm_-_Steam-Boat_off_a_Harbour%27s_Mouth.jpg',
+  'corot':          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg/600px-Jean-Baptiste-Camille_Corot_-_Interrupted_Reading_-_Google_Art_Project.jpg',
+  'egyptMask':      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg/600px-Egyptian_-_Mummy_Mask_-_Walters_542010_-_Three_Quarter.jpg',
+  'greekVase':      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg/600px-Briseis_Painter_-_Red-Figure_Kylix_-_Walters_48266.jpg',
+  'buddhistThangka':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Chakrasamvara_mandala_Nyingma.jpg/600px-Chakrasamvara_mandala_Nyingma.jpg',
+  'mughalPortrait': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mughal_Prince_on_Horseback.jpg/600px-Mughal_Prince_on_Horseback.jpg',
+  'islamicBowl':    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Bowl_with_Kufic_Inscription_Met_Museum.jpg/600px-Bowl_with_Kufic_Inscription_Met_Museum.jpg',
+  'medievalMS':     'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Book_of_Hours_Morgan_Library.jpg/600px-Book_of_Hours_Morgan_Library.jpg',
+  'chineseLandscape':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Shitao_-_Landscape.jpg/600px-Shitao_-_Landscape.jpg',
 };
 
 const ART_LOAD_PROMISE = (async () => {
@@ -548,6 +566,10 @@ Japanese philosophy: Watsuji (always: Kyoto School ethicist), Nishida (pure expe
 Buddhist thought: ALWAYS second, NEVER opens alone. Arrives as genuine expansion. Use precise terms — never wellness language.
   Nagarjuna (śūnyatā), Dōgen (being-time), Thich Nhat Hanh (interbeing), Vasubandhu, Machig Labdrön, Chandrakirti
   Theravada: anicca, anattā, paṭicca-samuppāda — presented as philosophy not spirituality
+  Living tradition teachers — philosophically rigorous, not merely inspirational:
+    Shunryu Suzuki (beginner's mind as epistemology — the expert's mind forecloses; the beginner's mind opens. Zen Mind, Beginner's Mind. Source: cuke.com/shunryusuzuki.com)
+    Chögyam Trungpa (spiritual materialism — the ego's use of spiritual practice to reinforce itself; basic goodness; the cocoon as what taming produces. Cutting Through Spiritual Materialism, Shambhala)
+    Thinley Norbu (Magic Dance, White Sail — Dzogchen philosophy at its most poetic and precise; the nature of mind as primordially pure; display and essence)
 Indian philosophy: Upanishads, Patanjali, Abhinavagupta, Kashmir Shaivism, Krishnamurti — second position
 Islamic philosophy: Ibn Arabi, Al-Ghazali, Averroes, Avicenna — second position
 
@@ -571,7 +593,7 @@ CRITICAL PROTECTION AGAINST NEW-AGE FLATTENING:
 Buddhist, Indigenous, and Eastern thought must arrive with the same philosophical rigor as Western thought. Use the actual term in its actual language. Name the actual thinker. State the actual philosophical claim. "Anicca" is not "everything changes." "Śūnyatā" is not emptiness of meaning. Dadirri is not "mindfulness." Precision is what protects these traditions.
 
 CONCEPT AND THINKER MUST MATCH EXACTLY:
-Haecceity → Deleuze/Guattari | Conatus → Spinoza | Fūdo → Watsuji | Duration → Bergson | Heteroglossia → Bakhtin | Dadirri → Ungunmerr-Baumann | Emplacement → Howes | Dwelling → Ingold | Śūnyatā → Nagarjuna | Anicca → Theravada/Pali | Interbeing → Thich Nhat Hanh | Opacity → Glissant | Affect → Massumi | Sympoiesis → Haraway | Tsawalk → Atleo | Kincentric ecology → Salmón
+Beginner's mind → Shunryu Suzuki | Spiritual materialism → Chögyam Trungpa | Basic goodness → Chögyam Trungpa | Haecceity → Deleuze/Guattari | Conatus → Spinoza | Fūdo → Watsuji | Duration → Bergson | Heteroglossia → Bakhtin | Dadirri → Ungunmerr-Baumann | Emplacement → Howes | Dwelling → Ingold | Śūnyatā → Nagarjuna | Anicca → Theravada/Pali | Interbeing → Thich Nhat Hanh | Opacity → Glissant | Affect → Massumi | Sympoiesis → Haraway | Tsawalk → Atleo | Kincentric ecology → Salmón
 
 CONCEPT NAME must be identical in opening and concept_name field.
 
